@@ -2,10 +2,20 @@
 EXECUTABLE  = elevator
 
 COMPILER    = clang
-CFLAGS      = -Wall -g -std=gnu11 -fsanitize=address
-LDFLAGS     = -fsanitize=address
 EXCLUDE     = '*test*'
 
+STD        	= -std=gnu11 -Wall
+
+# Default mode is debug
+MODE ?= debug
+
+ifeq ($(MODE), debug)
+    CFLAGS  = $(STD) -g -O0 -fsanitize=address -fsanitize=undefined
+    LDFLAGS = -fsanitize=address -fsanitize=undefined
+else
+    CFLAGS  = $(STD) -O3 -DNDEBUG
+    LDFLAGS = 
+endif
 
 SOURCEDIR = src
 OBJECTDIR = build
@@ -16,7 +26,7 @@ OBJECTS = $(addprefix $(OBJECTDIR)/, $(SOURCES:.c=.o))
 all: $(EXECUTABLE) 
 
 rebuild: clean all
-	
+
 clean:
 	rm -f $(EXECUTABLE)
 	rm -rf $(OBJECTDIR)
