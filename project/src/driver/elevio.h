@@ -18,15 +18,17 @@ typedef enum {
     BUTTON_CAB          = 2
 } ButtonType;
 
-
+// Init
 void elevio_init(void);
 
+// Outputs
 void elevio_motorDirection(MotorDirection dirn);
 void elevio_buttonLamp(int floor, ButtonType button, int value);
 void elevio_floorIndicator(int floor);
 void elevio_doorOpenLamp(int value);
 void elevio_stopLamp(int value);
 
+// Inputs
 int elevio_callButton(int floor, ButtonType button);
 int elevio_floorSensor(void);
 int elevio_stopButton(void);
