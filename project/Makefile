@@ -7,15 +7,15 @@ EXCLUDE     = '*test*'
 STD        	= -std=gnu11 -Wall
 
 # Default mode is debug
-MODE ?= debug
-
-ifeq ($(MODE), debug)
-    CFLAGS  = $(STD) -g -O0 -fsanitize=address -fsanitize=undefined
-    LDFLAGS = -fsanitize=address -fsanitize=undefined
-else
+# MODE ?= debug
+#
+# ifeq ($(MODE), debug)
+#     CFLAGS  = $(STD) -g -O0 -fsanitize=address -fsanitize=undefined
+#     LDFLAGS = -fsanitize=address -fsanitize=undefined
+# else
     CFLAGS  = $(STD) -O3 -DNDEBUG
     LDFLAGS = 
-endif
+# endif
 
 SOURCEDIR = src
 OBJECTDIR = build
@@ -40,6 +40,8 @@ $(OBJECTDIR)/%.o: $(SOURCEDIR)/%.c
 	@mkdir -p $(@D)
 	$(COMPILER) -o $@ -c $(CFLAGS) $<
 
+run:
+	./$(EXECUTABLE)
 	
 .PHONY: all rebuild clean
 
