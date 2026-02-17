@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <time.h>
-#include "driver/elevio.h"
 
+#include "driver/elevio.h"
+#include "timer.h"
 
 
 int main(){
@@ -17,8 +18,16 @@ int main(){
     while(1){
         int floor = elevio_floorSensor();
 
+        if (floor != -1)
+          printf("Current floor: %d \n", floor);
+
+        if (timer_isTimeout()) {
+          printf("Timer has timed out! \n");
+          timer_stop();
+        }
         if(floor == 0){
             elevio_motorDirection(DIRN_UP);
+            timer_start(5.0f);
         }
 
         if(floor == N_FLOORS-1){
