@@ -1,6 +1,8 @@
 #include "timer.h"
 #include <sys/time.h>
 #include <stddef.h>
+#include <stdbool.h>
+#include <time.h>
 
 static double _timerEndTime;
 static bool   _timerActive = false;
@@ -29,3 +31,9 @@ bool timer_isTimeout(void) {
   return (_timerActive && (timer_getWallTime() > _timerEndTime));
 }
 
+void timer_msSleep(long ms) {
+  struct timespec ts;
+  ts.tv_sec = ms / 1000;
+  ts.tv_nsec = (ms % 1000) * 1000000L;
+  nanosleep(&ts, NULL);
+}
