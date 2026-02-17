@@ -7,15 +7,16 @@ EXCLUDE     = '*test*'
 STD        	= -std=gnu11 -Wall
 
 # Default mode is debug
-# MODE ?= debug
-#
-# ifeq ($(MODE), debug)
-#     CFLAGS  = $(STD) -g -O0 -fsanitize=address -fsanitize=undefined
-#     LDFLAGS = -fsanitize=address -fsanitize=undefined
-# else
-    CFLAGS  = $(STD) -O3 -DNDEBUG
-    LDFLAGS = 
-# endif
+MODE ?= rel
+
+ifeq ($(MODE), debug)
+    CFLAGS  = $(STD) -g -O0 -fsanitize=address -fsanitize=undefined
+    LDFLAGS = -fsanitize=address -fsanitize=undefined
+else ifeq ($(MODE), rel)
+  CFLAGS  = $(STD) -O3 -DDEBUG -DLOG_USE_COLOR
+  # CFLAGS  = $(STD) -O3 -DNDEBUG -DLOG_USE_COLOR
+  LDFLAGS = 
+endif
 
 SOURCEDIR = src
 OBJECTDIR = build
@@ -31,16 +32,16 @@ clean:
 	rm -f $(EXECUTABLE)
 	rm -rf $(OBJECTDIR)
 
-## executable depends on object files: link them
+## link files the executable depends on
 $(EXECUTABLE): $(OBJECTS) 
 	$(COMPILER) $^ -o $@ $(LDFLAGS)
 
-## object files depend on source files: compile them
+## compile the source files which object files depend on
 $(OBJECTDIR)/%.o: $(SOURCEDIR)/%.c
 	@mkdir -p $(@D)
 	$(COMPILER) -o $@ -c $(CFLAGS) $<
 
-run:
+run: $(EXECUTABLE)
 	./$(EXECUTABLE)
 	
 .PHONY: all rebuild clean
