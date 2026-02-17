@@ -15,3 +15,5 @@ void fsm_onIdle(void);
 void fsm_onMoving(void);
 void fsm_onDoorOpen(void);
 void fsm_onStop(void);
+
+void fsm_spin(void);
