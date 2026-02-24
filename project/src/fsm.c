@@ -1,12 +1,29 @@
 #include "fsm.h"
 
+#include <stdio.h>
+#include <string.h>
+
 #include "timer.h"
 
 #include "driver/elevio.h"
 #include "lib/log.h"
 
+#define QUEUE_SIZE 10
+
+// FSM private singleton state
 static ElevatorState currentState = STATE_INIT;
 static int           currentFloor = 0;
+
+// Queue order array
+bool orderArr[N_FLOORS][N_BUTTONS] = { false };
+
+// Timers 
+timerAlarm doorOpenTimer;
+timerAlarm btnQueryTimer;
+
+// Btn states
+bool btn_states[N_FLOORS][N_BUTTONS]      = { false };
+bool prev_btn_states[N_FLOORS][N_BUTTONS] = { false };
 
 void fsm_onInit(void) {
   // Driver init 
@@ -14,6 +31,17 @@ void fsm_onInit(void) {
     log_debug("Initializing elevator...");
   #endif // DEBUG
   elevio_init();
+
+  // Init timers
+  timer_init(&doorOpenTimer);
+  timer_init(&btnQueryTimer);
+
+  // Clear button lights
+  for(int f = 0; f < N_FLOORS; f++){
+    for(int b = 0; b < N_BUTTONS; b++){
+      elevio_buttonLamp(f, b, false);
+    }
+  }
 
   // Localize a floor (PRD: O1)
   // Blocking, ignores everything else (PRD: O2)
@@ -37,21 +65,48 @@ void fsm_onIdle(void) {
 }
 
 void fsm_onMoving(void) {
-  // Do stuff
+  /* LOOK algo (modified SCAN)
+  1. Maintain direction - continue moving e.g. up if there are requests from the floors above
+  2. Ignore opposing requests - if moving e.g. up do not stop for a hall down request at f_0 
+                                (unless about to turn around)
+  3. Go to IDLE if no reqs
+  */
+
+  // Return if between floors
+  if (currentFloor == -1) return;
+
+  // Query order list
+  for(int b = 0; b < N_BUTTONS; b++){
+    // If order is at current floor, complete the order
+    if (orderArr[currentFloor][b]) {
+      elevio_motorDirection(DIRN_STOP);
+      orderArr[currentFloor][b] = false;
+      elevio_buttonLamp(currentFloor, b, false);
+      currentState = STATE_DOOR_OPEN;
+    }
+
+    // for (int f_offset = 0; f_offset < N_FLOORS - 1; f_offset++) { 
+    else if (orderArr[currentFloor + DIRN_DOWN ][b]) elevio_motorDirection(DIRN_DOWN);
+    else if (orderArr[currentFloor + DIRN_UP][b]) elevio_motorDirection(DIRN_UP);
+    // }
+  }
 }
 
 void fsm_onDoorOpen(void) {
-  if (timer_isTimeout()) {
-    timer_stop();
+  if (timer_isTimeout(&doorOpenTimer) && !elevio_obstruction()) {
+    timer_stop(&doorOpenTimer);
     elevio_doorOpenLamp(false);
+#ifdef DEBUG
     log_debug("Door closed!");
+#endif // DEBUG
     currentState = STATE_IDLE;
-    // Add state transition here
     return;
   }
   elevio_doorOpenLamp(true);
+#ifdef DEBUG
   log_debug("Opening door for 3 seconds");
-  timer_start(3);
+#endif // DEBUG
+  timer_start(&doorOpenTimer, 3);
 }
 
 void fsm_onStop(void) {
@@ -67,22 +122,55 @@ void fsm_onStop(void) {
 void fsm_spin(void) {
     // Update floor reading once per spin
     currentFloor = elevio_floorSensor();
+    if (currentFloor != -1) elevio_floorIndicator(currentFloor);
 
     // Start querying the btns after init
     if (currentState != STATE_INIT) {
+      // Query slower than the spin loop
+      timer_start(&btnQueryTimer, 0.01);
+
       // Check for button presses
-      for(int f = 0; f < N_FLOORS; f++){
-        for(int b = 0; b < N_BUTTONS; b++){
-          if (elevio_callButton(f, b)) {
-            if (f == currentFloor) {
-              currentState = STATE_DOOR_OPEN;
-              return;
+      if (timer_isTimeout(&btnQueryTimer)) {
+        timer_stop(&btnQueryTimer);
+        for(int f = 0; f < N_FLOORS; f++){
+          for(int b = 0; b < N_BUTTONS; b++){
+            // Get btn state
+            bool fb_btn_state = elevio_callButton(f, b);
+            btn_states[f][b] = fb_btn_state;
+
+            // Debounce the button
+            if (btn_states[f][b] != prev_btn_states[f][b]) {
+              prev_btn_states[f][b] = btn_states[f][b];
+              
+              if (fb_btn_state) {
+                if (f == currentFloor) {
+                  currentState = STATE_DOOR_OPEN;
+                } else {
+                  // Turn on requested floor lights
+                  elevio_buttonLamp(f, b, fb_btn_state);
+
+                  // Add new order
+                  orderArr[f][b]  = true;
+                  currentState    = STATE_MOVING;
+                }
+              }
             }
           }
         }
       }
-         
     }
+
+    printf("ORDER QUEUE:\n"); 
+    for(int f = 0; f < N_FLOORS; f++){
+      for(int b = 0; b < N_BUTTONS; b++){
+        if (orderArr[f][b]) {
+          if (b == 0) printf("UP button pressed on floor number %d.\n", f);
+          else if (b == 1) printf("DOWN button pressed on floor number %d.\n", f);
+          else if (b == 2) printf("CAB button pressed to go to floor number %d.\n", f);
+        }
+      }
+    }
+
     switch (currentState) {
         case STATE_INIT:
             fsm_onInit();
