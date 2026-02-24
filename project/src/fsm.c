@@ -112,7 +112,18 @@ void fsm_onDoorOpen(void) {
 #ifdef DEBUG
     log_debug("Door closed!");
 #endif // DEBUG
-    currentState = STATE_IDLE;
+
+    // Clear orders for this floor
+    for (int b = 0; b < N_BUTTONS; b++) {
+      orderArr[currentFloor][b] = false;
+      elevio_buttonLamp(currentFloor, b, false);
+    }
+
+    // No more orders, transition to idle
+    if (are_all_zeros(N_FLOORS, N_BUTTONS, orderArr)) currentState = STATE_IDLE;
+    else currentState = STATE_MOVING; // More orders await, move more
+
+    // Just finished opening the door, return
     return;
   }
   elevio_doorOpenLamp(true);
