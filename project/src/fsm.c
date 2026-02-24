@@ -130,6 +130,9 @@ void fsm_onDoorOpen(void) {
 #ifdef DEBUG
   log_debug("Opening door for 3 seconds");
 #endif // DEBUG
+
+  // Restart timer if obstruction is present (PRD: D4)
+  if (elevio_obstruction()) timer_stop(&doorOpenTimer);
   timer_start(&doorOpenTimer, 3);
 }
 
