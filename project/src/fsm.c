@@ -5,10 +5,8 @@
 #include "driver/elevio.h"
 #include "lib/log.h"
 
-
 static ElevatorState currentState = STATE_INIT;
 static int           currentFloor = 0;
-
 
 void fsm_onInit(void) {
   // Driver init 
@@ -36,21 +34,6 @@ void fsm_onIdle(void) {
   
   // Door is closed
   elevio_doorOpenLamp(false);
-
-  // Check for button presses
-  for(int f = 0; f < N_FLOORS; f++){
-    for(int b = 0; b < N_BUTTONS; b++){
-      if (elevio_callButton(f, b)) {
-        if (f == currentFloor) {
-          log_info("Current floor: %d    Button pressed for current floor %d, opening door...", currentFloor, f);
-          elevio_doorOpenLamp(true); // Testing
-          timer_msSleep(1000); // Testing
-          // currentState = STATE_DOOR_OPEN;
-          return;
-        }
-      }
-    }
-  }
 }
 
 void fsm_onMoving(void) {
@@ -58,7 +41,17 @@ void fsm_onMoving(void) {
 }
 
 void fsm_onDoorOpen(void) {
-  // Do stuff
+  if (timer_isTimeout()) {
+    timer_stop();
+    elevio_doorOpenLamp(false);
+    log_debug("Door closed!");
+    currentState = STATE_IDLE;
+    // Add state transition here
+    return;
+  }
+  elevio_doorOpenLamp(true);
+  log_debug("Opening door for 3 seconds");
+  timer_start(3);
 }
 
 void fsm_onStop(void) {
@@ -75,6 +68,21 @@ void fsm_spin(void) {
     // Update floor reading once per spin
     currentFloor = elevio_floorSensor();
 
+    // Start querying the btns after init
+    if (currentState != STATE_INIT) {
+      // Check for button presses
+      for(int f = 0; f < N_FLOORS; f++){
+        for(int b = 0; b < N_BUTTONS; b++){
+          if (elevio_callButton(f, b)) {
+            if (f == currentFloor) {
+              currentState = STATE_DOOR_OPEN;
+              return;
+            }
+          }
+        }
+      }
+         
+    }
     switch (currentState) {
         case STATE_INIT:
             fsm_onInit();
