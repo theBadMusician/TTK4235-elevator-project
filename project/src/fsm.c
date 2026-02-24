@@ -25,6 +25,19 @@ timerAlarm btnQueryTimer;
 bool btn_states[N_FLOORS][N_BUTTONS]      = { false };
 bool prev_btn_states[N_FLOORS][N_BUTTONS] = { false };
 
+
+bool are_all_zeros(int n_a, int n_b, bool arr[n_a][n_b]) {
+    bool *ptr = &arr[0][0]; // Pointer to the first element
+    int total_elements = n_a * n_b;
+
+    for (int i = 0; i < total_elements; i++) {
+        if (ptr[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
 void fsm_onInit(void) {
   // Driver init 
   #ifdef DEBUG
