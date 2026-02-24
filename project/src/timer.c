@@ -1,11 +1,4 @@
 #include "timer.h"
-#include <sys/time.h>
-#include <stddef.h>
-#include <stdbool.h>
-#include <time.h>
-
-static double _timerEndTime;
-static bool   _timerActive = false;
 
 double timer_getWallTime() {
   struct timeval timecheck;
@@ -14,21 +7,26 @@ double timer_getWallTime() {
   return (double)timecheck.tv_sec + (double)timecheck.tv_usec * 1e-6;
 }
 
-void timer_start(double duration) {
+void timer_init(timerAlarm* timerAlarmInstance) {
+  timerAlarmInstance->timerActive = false;
+  timerAlarmInstance->timerEndTime = 0.0f;
+}
+
+void timer_start(timerAlarm* timerAlarmInstance, double duration) {
   // Do not overwrite a running timer
-  if (_timerActive) return;
+  if (timerAlarmInstance->timerActive) return;
 
-  _timerEndTime = timer_getWallTime() + duration;
-  _timerActive = true;
+  timerAlarmInstance->timerEndTime = timer_getWallTime() + duration;
+  timerAlarmInstance->timerActive = true;
 }
 
-void timer_stop(void) {
-  _timerEndTime = timer_getWallTime();
-  _timerActive = false;
+void timer_stop(timerAlarm* timerAlarmInstance) {
+  timerAlarmInstance->timerEndTime = timer_getWallTime();
+  timerAlarmInstance->timerActive = false;
 }
 
-bool timer_isTimeout(void) {
-  return (_timerActive && (timer_getWallTime() > _timerEndTime));
+bool timer_isTimeout(timerAlarm* timerAlarmInstance) {
+  return (timerAlarmInstance->timerActive && (timer_getWallTime() > timerAlarmInstance->timerEndTime));
 }
 
 void timer_msSleep(long ms) {
