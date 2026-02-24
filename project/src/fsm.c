@@ -11,8 +11,9 @@
 #define QUEUE_SIZE 10
 
 // FSM private singleton state
-static ElevatorState currentState = STATE_INIT;
-static int           currentFloor = 0;
+static ElevatorState  currentState = STATE_INIT;
+static int            currentFloor = 0;
+static MotorDirection currentDir   = 0;
 
 // Queue order array
 bool orderArr[N_FLOORS][N_BUTTONS] = { false };
@@ -84,6 +85,9 @@ void fsm_onMoving(void) {
                                 (unless about to turn around)
   3. Go to IDLE if no reqs
   */
+  
+  // TODO: if a button is pressed during doorOpen elevator immediately starts moving
+  // TODO: [DONE?] each button pressed on the same floor holds the door open for 3 seconds
 
   // Return if between floors
   if (currentFloor == -1) return;
@@ -93,16 +97,24 @@ void fsm_onMoving(void) {
     // If order is at current floor, complete the order
     if (orderArr[currentFloor][b]) {
       elevio_motorDirection(DIRN_STOP);
-      orderArr[currentFloor][b] = false;
-      elevio_buttonLamp(currentFloor, b, false);
       currentState = STATE_DOOR_OPEN;
+      return;
     }
 
-    // for (int f_offset = 0; f_offset < N_FLOORS - 1; f_offset++) { 
-    else if (orderArr[currentFloor + DIRN_DOWN ][b]) elevio_motorDirection(DIRN_DOWN);
-    else if (orderArr[currentFloor + DIRN_UP][b]) elevio_motorDirection(DIRN_UP);
-    // }
+    for (int f_offset = 0; f_offset < N_FLOORS - 1; f_offset++) { 
+      int next_lower_floor_to_check = currentFloor - f_offset;
+      int next_upper_floor_to_check = currentFloor + f_offset;
+      if (orderArr[next_lower_floor_to_check][b] && next_lower_floor_to_check > -1) {
+        currentDir = DIRN_DOWN;
+        break;
+      }
+      else if (orderArr[next_upper_floor_to_check][b] && next_upper_floor_to_check < N_FLOORS) {
+        currentDir = DIRN_UP;
+        break;
+      }
+    }
   }
+  elevio_motorDirection(currentDir);
 }
 
 void fsm_onDoorOpen(void) {
