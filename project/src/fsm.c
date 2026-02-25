@@ -8,11 +8,12 @@
 #include "driver/elevio.h"
 #include "lib/log.h"
 
-#define QUEUE_SIZE 10
+#define TOTAL_BUTTONS (N_FLOORS * N_BUTTONS) 
 
 // FSM private singleton state
 static ElevatorState  currentState = STATE_INIT;
 static int            currentFloor = 0;
+static int            prevFloor    = 0;
 static MotorDirection currentDir   = 0;
 
 // Queue order array
@@ -21,6 +22,7 @@ bool orderArr[N_FLOORS][N_BUTTONS] = { false };
 // Timers 
 timerAlarm doorOpenTimer;
 timerAlarm btnQueryTimer;
+timerAlarm stopDebouncerTimer;
 
 // Btn states
 bool btn_states[N_FLOORS][N_BUTTONS]      = { false };
@@ -65,6 +67,9 @@ void fsm_onInit(void) {
   }
   elevio_motorDirection(DIRN_STOP);
   
+  // Init previous floor state
+  prevFloor = elevio_floorSensor();
+
   // State transition T_0: STATE_INIT -> STATE_IDLE
   currentState = STATE_IDLE;
 }
@@ -75,7 +80,7 @@ void fsm_onIdle(void) {
   currentDir = DIRN_STOP;
 
   // Motor is stopped
-  elevio_motorDirection(currentDir);
+  elevio_motorDirection(DIRN_STOP);
   
   // Door is closed
   elevio_doorOpenLamp(false);
@@ -184,13 +189,32 @@ void fsm_onDoorOpen(void) {
 }
 
 void fsm_onStop(void) {
-    // Stop the elevator, clear queue, reset state
-    elevio_motorDirection(DIRN_STOP);
+    // TODO: Do not set direction stop in idle and stop states if current floor is -1, this way we can figure which floors the elev is between using (prevFloor + currentDir)
+    // TODO: Moving state has to have logic to start moving to the closest floor after stop if inbetween floors (after an order is received)
 
-    // TODO: Clear the order queue
-    
-    // TODO: Check state transition conditions for stop state
-    currentState = STATE_IDLE;
+    /* Stop the elevator, clear queue, reset state */
+
+    // Set the the current direction to stop and stop motor
+    currentDir = DIRN_STOP;
+    elevio_motorDirection(currentDir);
+
+    // Clear the order queue and btn states
+    memset(orderArr,        false, sizeof(orderArr)); 
+    memset(btn_states,      false, sizeof(btn_states)); 
+    memset(prev_btn_states, false, sizeof(prev_btn_states)); 
+
+    // Clear button lights
+    for(int f = 0; f < N_FLOORS; f++){
+      for(int b = 0; b < N_BUTTONS; b++){
+        elevio_buttonLamp(f, b, false);
+      }
+    }
+
+    // state transition
+    if (currentFloor != -1) {
+      elevio_stopLamp(true);
+      currentState = STATE_DOOR_OPEN;
+    } else currentState = STATE_IDLE;
 }
 
 void fsm_spin(void) {
@@ -202,26 +226,41 @@ void fsm_spin(void) {
     if (currentState != STATE_INIT) {
       // Query slower than the spin loop
       timer_start(&btnQueryTimer, 0.01);
+      
+      // Check stop btn
+      if (elevio_stopButton()) {
+        elevio_stopLamp(true);
+        timer_stop(&stopDebouncerTimer);
+        timer_start(&stopDebouncerTimer, 0.5);
+        currentState = STATE_STOP;
+      }
 
       // Check for button presses
       if (timer_isTimeout(&btnQueryTimer)) {
         timer_stop(&btnQueryTimer);
-        for(int f = 0; f < N_FLOORS; f++){
-          for(int b = 0; b < N_BUTTONS; b++){
-            // Get btn state
-            bool fb_btn_state = elevio_callButton(f, b);
-            btn_states[f][b] = fb_btn_state;
+        // Only take orders if the stop btn is NOT pressed
+        if (timer_isTimeout(&stopDebouncerTimer)) {
+          // Clear stop lamp if stop btn no longer pressed
+          elevio_stopLamp(elevio_stopButton());
 
-            // Debounce the button
-            if (btn_states[f][b] != prev_btn_states[f][b]) {
-              prev_btn_states[f][b] = btn_states[f][b];
-              
-              if (fb_btn_state) {
-                elevio_buttonLamp(f, b, fb_btn_state);
+          // Check order btns
+          for(int f = 0; f < N_FLOORS; f++){
+            for(int b = 0; b < N_BUTTONS; b++){
+              // Get btn state
+              bool fb_btn_state = elevio_callButton(f, b);
+              btn_states[f][b] = fb_btn_state;
 
-                // Add new order
-                orderArr[f][b]  = true;
-                currentState    = STATE_MOVING;
+              // Debounce the button
+              if (btn_states[f][b] != prev_btn_states[f][b]) {
+                prev_btn_states[f][b] = btn_states[f][b];
+                
+                if (fb_btn_state && !elevio_stopButton()) {
+                  elevio_buttonLamp(f, b, true);
+
+                  // Add new order
+                  orderArr[f][b]  = true;
+                  currentState    = STATE_MOVING;
+                }
               }
             }
           }
@@ -257,4 +296,7 @@ void fsm_spin(void) {
             fsm_onStop();
             break;
     }
+
+    // Set the previous floor if not between floors
+    if (currentFloor != -1) prevFloor = currentFloor;
 }
