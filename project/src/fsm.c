@@ -185,16 +185,11 @@ void fsm_spin(void) {
               prev_btn_states[f][b] = btn_states[f][b];
               
               if (fb_btn_state) {
-                if (f == currentFloor) {
-                  currentState = STATE_DOOR_OPEN;
-                } else {
-                  // Turn on requested floor lights
-                  elevio_buttonLamp(f, b, fb_btn_state);
+                elevio_buttonLamp(f, b, fb_btn_state);
 
-                  // Add new order
-                  orderArr[f][b]  = true;
-                  currentState    = STATE_MOVING;
-                }
+                // Add new order
+                orderArr[f][b]  = true;
+                currentState    = STATE_MOVING;
               }
             }
           }
