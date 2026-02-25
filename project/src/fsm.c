@@ -101,7 +101,7 @@ void fsm_onMoving(void) {
       return;
     }
 
-    for (int f_offset = 0; f_offset < N_FLOORS - 1; f_offset++) { 
+    for (int f_offset = 1; f_offset < N_FLOORS; f_offset++) { 
       int next_lower_floor_to_check = currentFloor - f_offset;
       int next_upper_floor_to_check = currentFloor + f_offset;
       if (orderArr[next_lower_floor_to_check][b] && next_lower_floor_to_check > -1) {
