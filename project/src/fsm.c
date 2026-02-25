@@ -71,8 +71,11 @@ void fsm_onInit(void) {
 
 
 void fsm_onIdle(void) {
+  // Set the the current direction (movement moment) to stop 
+  currentDir = DIRN_STOP;
+
   // Motor is stopped
-  elevio_motorDirection(DIRN_STOP);
+  elevio_motorDirection(currentDir);
   
   // Door is closed
   elevio_doorOpenLamp(false);
