@@ -89,7 +89,7 @@ void fsm_onMoving(void) {
   3. Go to IDLE if no reqs
   */
   
-  // TODO: if a button is pressed during doorOpen elevator immediately starts moving
+  // TODO: [DONE?] if a button is pressed during doorOpen elevator immediately starts moving
   // TODO: [DONE?] each button pressed on the same floor holds the door open for 3 seconds
 
   // Return if between floors
@@ -99,12 +99,41 @@ void fsm_onMoving(void) {
   for(int b = 0; b < N_BUTTONS; b++){
     // If order is at current floor, complete the order
     if (orderArr[currentFloor][b]) {
+      // If moving up, ignore down hall calls; if moving down, ignore up hall calls (PRD: H2)
+      if ((currentDir == DIRN_UP && b == BUTTON_HALL_DOWN) || (currentDir == DIRN_DOWN && b == BUTTON_HALL_UP)) continue;
+
+      // Else open the door at current floor
       elevio_motorDirection(DIRN_STOP);
       currentState = STATE_DOOR_OPEN;
       return;
     }
   }
 
+  // Check for orders on the floors in the current direction
+  // The order button type cannot be for the opposite direction
+  bool found_order_in_current_dir = false;
+  for (int f_offset = 1; f_offset < N_FLOORS; f_offset++) { 
+    int next_floor_to_check = currentFloor + f_offset * currentDir;
+
+    if (next_floor_to_check > -1 && next_floor_to_check < N_FLOORS) {
+      for (int b = 0; b < N_BUTTONS; b++) {
+        // If moving up, ignore down hall calls; if moving down, ignore up hall calls (PRD: H2)
+        if ((currentDir == DIRN_UP && b == BUTTON_HALL_DOWN) || (currentDir == DIRN_DOWN && b == BUTTON_HALL_UP)) continue;
+
+        if (orderArr[next_floor_to_check][b]) {
+          found_order_in_current_dir = true;
+          break;
+        }
+      }
+    }
+    if (found_order_in_current_dir) break;
+  }
+  if (found_order_in_current_dir) {
+    elevio_motorDirection(currentDir);
+    return;
+  } 
+
+  // else if current dir is stop, go to closest floor
   for (int f_offset = 1; f_offset < N_FLOORS; f_offset++) { 
     int next_lower_floor_to_check = currentFloor - f_offset;
     int next_upper_floor_to_check = currentFloor + f_offset;
