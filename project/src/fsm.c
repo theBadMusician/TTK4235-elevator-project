@@ -1,6 +1,7 @@
 #include "fsm.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "timer.h"
@@ -141,7 +142,7 @@ void fsm_onMoving(void) {
     // If order is at current floor, complete the order
     if (orderArr[currentFloor][b]) {
       // If moving up, ignore down hall calls; if moving down, ignore up hall calls (PRD: H2)
-      if (!isSingleElementTrue(N_FLOORS, N_BUTTONS, orderArr) && ((currentDir == DIRN_UP && b == BUTTON_HALL_DOWN) || (currentDir == DIRN_DOWN && b == BUTTON_HALL_UP))) continue;
+      if (!isSingleElementTrue(orderArr) && ((currentDir == DIRN_UP && b == BUTTON_HALL_DOWN) || (currentDir == DIRN_DOWN && b == BUTTON_HALL_UP))) continue;
 
       // Else open the door at current floor
       elevio_motorDirection(DIRN_STOP);
@@ -159,7 +160,7 @@ void fsm_onMoving(void) {
     if (next_floor_to_check > -1 && next_floor_to_check < N_FLOORS) {
       for (int b = 0; b < N_BUTTONS; b++) {
         // If moving up, ignore down hall calls; if moving down, ignore up hall calls (PRD: H2)
-        if (!isSingleElementTrue(N_FLOORS, N_BUTTONS, orderArr) && ((currentDir == DIRN_UP && b == BUTTON_HALL_DOWN) || (currentDir == DIRN_DOWN && b == BUTTON_HALL_UP))) continue;
+        if (!isSingleElementTrue(orderArr) && ((currentDir == DIRN_UP && b == BUTTON_HALL_DOWN) || (currentDir == DIRN_DOWN && b == BUTTON_HALL_UP))) continue;
 
         if (orderArr[next_floor_to_check][b]) {
           found_order_in_current_dir = true;
@@ -209,7 +210,7 @@ void fsm_onDoorOpen(void) {
     }
 
     // No more orders, transition to idle
-    if (areAllElementsFalse(N_FLOORS, N_BUTTONS, orderArr)) currentState = STATE_IDLE;
+    if (areAllElementsFalse(orderArr)) currentState = STATE_IDLE;
     else currentState = STATE_MOVING; // More orders await, move more
 
     // Just finished opening the door, return
