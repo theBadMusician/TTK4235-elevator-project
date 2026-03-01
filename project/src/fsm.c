@@ -173,7 +173,7 @@ void fsm_onMoving(void) {
 }
 
 void fsm_onDoorOpen(void) {
-  if (timer_isTimeout(&doorOpenTimer) && !elevio_obstruction()) {
+  if (timer_isTimeout(&doorOpenTimer) && !elevio_obstruction() && !elevio_stopButton()) {
     timer_stop(&doorOpenTimer);
     elevio_doorOpenLamp(false);
 #ifdef DEBUG
@@ -199,7 +199,8 @@ void fsm_onDoorOpen(void) {
 #endif // DEBUG
 
   // Restart timer if obstruction is present (PRD: D4)
-  if (elevio_obstruction()) timer_stop(&doorOpenTimer);
+  // Restart timer if stop button is pressed (PRD: D3)
+  if (elevio_obstruction() || elevio_stopButton()) timer_stop(&doorOpenTimer);
   timer_start(&doorOpenTimer, 3);
 }
 
