@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "timer.h"
+#include "utils.h"
 
 #include "driver/elevio.h"
 #include "lib/log.h"
@@ -31,32 +32,6 @@ timerAlarm stopDebouncerTimer;
 bool btn_states[N_FLOORS][N_BUTTONS]      = { false };
 bool prev_btn_states[N_FLOORS][N_BUTTONS] = { false };
 
-
-bool is_one_true(int n_a, int n_b, bool arr[n_a][n_b]) {
-    bool *ptr = &arr[0][0]; // Pointer to the first element
-    int total_elements = n_a * n_b;
-    
-    int number_of_trues = 0;
-    for (int i = 0; i < total_elements; i++) {
-        if (ptr[i]) {
-            number_of_trues++;
-            if (number_of_trues > 1) return false;
-        }
-    }
-    return true;
-}
-
-bool are_all_zeros(int n_a, int n_b, bool arr[n_a][n_b]) {
-    bool *ptr = &arr[0][0]; // Pointer to the first element
-    int total_elements = n_a * n_b;
-
-    for (int i = 0; i < total_elements; i++) {
-        if (ptr[i]) {
-            return false;
-        }
-    }
-    return true;
-}
 
 void fsm_onInit(void) {
   // Driver init 
