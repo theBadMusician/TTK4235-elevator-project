@@ -29,6 +29,20 @@ bool btn_states[N_FLOORS][N_BUTTONS]      = { false };
 bool prev_btn_states[N_FLOORS][N_BUTTONS] = { false };
 
 
+bool is_one_true(int n_a, int n_b, bool arr[n_a][n_b]) {
+    bool *ptr = &arr[0][0]; // Pointer to the first element
+    int total_elements = n_a * n_b;
+    
+    int number_of_trues = 0;
+    for (int i = 0; i < total_elements; i++) {
+        if (ptr[i]) {
+            number_of_trues++;
+            if (number_of_trues > 1) return false;
+        }
+    }
+    return true;
+}
+
 bool are_all_zeros(int n_a, int n_b, bool arr[n_a][n_b]) {
     bool *ptr = &arr[0][0]; // Pointer to the first element
     int total_elements = n_a * n_b;
@@ -106,7 +120,7 @@ void fsm_onMoving(void) {
     // If order is at current floor, complete the order
     if (orderArr[currentFloor][b]) {
       // If moving up, ignore down hall calls; if moving down, ignore up hall calls (PRD: H2)
-      if ((currentDir == DIRN_UP && b == BUTTON_HALL_DOWN) || (currentDir == DIRN_DOWN && b == BUTTON_HALL_UP)) continue;
+      if (!is_one_true(N_FLOORS, N_BUTTONS, orderArr) && ((currentDir == DIRN_UP && b == BUTTON_HALL_DOWN) || (currentDir == DIRN_DOWN && b == BUTTON_HALL_UP))) continue;
 
       // Else open the door at current floor
       elevio_motorDirection(DIRN_STOP);
@@ -124,7 +138,7 @@ void fsm_onMoving(void) {
     if (next_floor_to_check > -1 && next_floor_to_check < N_FLOORS) {
       for (int b = 0; b < N_BUTTONS; b++) {
         // If moving up, ignore down hall calls; if moving down, ignore up hall calls (PRD: H2)
-        if ((currentDir == DIRN_UP && b == BUTTON_HALL_DOWN) || (currentDir == DIRN_DOWN && b == BUTTON_HALL_UP)) continue;
+        if (!is_one_true(N_FLOORS, N_BUTTONS, orderArr) && ((currentDir == DIRN_UP && b == BUTTON_HALL_DOWN) || (currentDir == DIRN_DOWN && b == BUTTON_HALL_UP))) continue;
 
         if (orderArr[next_floor_to_check][b]) {
           found_order_in_current_dir = true;
