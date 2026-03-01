@@ -258,13 +258,15 @@ void fsm_onStop(void) {
 void fsm_spin(void) {
     // Update floor reading once per spin
     currentFloor = elevio_floorSensor();
-    if (currentFloor != -1) elevio_floorIndicator(currentFloor);
 
     // Start querying the btns after init
     if (currentState != STATE_INIT) {
+      // Update floor indicator
+      if (currentFloor != -1) elevio_floorIndicator(currentFloor);
+
       // Query slower than the spin loop
       timer_start(&btnQueryTimer, 0.01);
-      
+
       // Check stop btn
       if (elevio_stopButton()) {
         elevio_stopLamp(true);
