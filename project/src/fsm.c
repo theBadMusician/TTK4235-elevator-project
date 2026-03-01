@@ -243,25 +243,25 @@ void fsm_spin(void) {
         if (timer_isTimeout(&stopDebouncerTimer)) {
           // Clear stop lamp if stop btn no longer pressed
           elevio_stopLamp(elevio_stopButton());
+        }
 
-          // Check order btns
-          for(int f = 0; f < N_FLOORS; f++){
-            for(int b = 0; b < N_BUTTONS; b++){
-              // Get btn state
-              bool fb_btn_state = elevio_callButton(f, b);
-              btn_states[f][b] = fb_btn_state;
+        // Check order btns
+        for(int f = 0; f < N_FLOORS; f++){
+          for(int b = 0; b < N_BUTTONS; b++){
+            // Get btn state
+            bool fb_btn_state = elevio_callButton(f, b);
+            btn_states[f][b] = fb_btn_state;
 
-              // Debounce the button
-              if (btn_states[f][b] != prev_btn_states[f][b]) {
-                prev_btn_states[f][b] = btn_states[f][b];
-                
-                if (fb_btn_state && !elevio_stopButton()) {
-                  elevio_buttonLamp(f, b, true);
+            // Debounce the button
+            if (btn_states[f][b] != prev_btn_states[f][b]) {
+              prev_btn_states[f][b] = btn_states[f][b];
+              
+              if (fb_btn_state && !elevio_stopButton()) {
+                elevio_buttonLamp(f, b, true);
 
-                  // Add new order
-                  orderArr[f][b]  = true;
-                  currentState    = STATE_MOVING;
-                }
+                // Add new order
+                orderArr[f][b]  = true;
+                currentState    = STATE_MOVING;
               }
             }
           }
