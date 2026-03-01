@@ -51,6 +51,7 @@ void fsm_onInit(void) {
   // Init timers
   timer_init(&doorOpenTimer);
   timer_init(&btnQueryTimer);
+  timer_init(&stopDebouncerTimer);
 
   // Clear button lights
   for(int f = 0; f < N_FLOORS; f++){
