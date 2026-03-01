@@ -14,7 +14,8 @@
 static ElevatorState  currentState = STATE_INIT;
 static int            currentFloor = 0;
 static int            prevFloor    = 0;
-static MotorDirection currentDir   = 0;
+static MotorDirection currentDir   = DIRN_STOP;
+static MotorDirection prevDir      = DIRN_STOP;
 
 // Queue order array
 bool orderArr[N_FLOORS][N_BUTTONS] = { false };
@@ -169,6 +170,7 @@ void fsm_onMoving(void) {
       }
     }
   }
+  if (currentDir != DIRN_STOP) prevDir = currentDir;
   elevio_motorDirection(currentDir);
 }
 
