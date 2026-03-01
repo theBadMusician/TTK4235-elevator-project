@@ -30,8 +30,8 @@ timerAlarm btnQueryTimer;
 timerAlarm stopDebouncerTimer;
 
 // Btn states
-bool btn_states[N_FLOORS][N_BUTTONS]      = { false };
-bool prev_btn_states[N_FLOORS][N_BUTTONS] = { false };
+bool btnStates[N_FLOORS][N_BUTTONS]      = { false };
+bool prevBtnStates[N_FLOORS][N_BUTTONS] = { false };
 
 
 void fsm_onInit(void) {
@@ -235,9 +235,9 @@ void fsm_onStop(void) {
     elevio_motorDirection(currentDir);
 
     // Clear the order queue and btn states
-    memset(orderArr,        false, sizeof(orderArr)); 
-    memset(btn_states,      false, sizeof(btn_states)); 
-    memset(prev_btn_states, false, sizeof(prev_btn_states)); 
+    memset(orderArr,      false, sizeof(orderArr)); 
+    memset(btnStates,     false, sizeof(btnStates)); 
+    memset(prevBtnStates, false, sizeof(prevBtnStates)); 
 
     // Clear button lights
     for(int f = 0; f < N_FLOORS; f++){
@@ -290,11 +290,11 @@ void fsm_spin(void) {
           for(int b = 0; b < N_BUTTONS; b++){
             // Get btn state
             bool fb_btn_state = elevio_callButton(f, b);
-            btn_states[f][b] = fb_btn_state;
+            btnStates[f][b] = fb_btn_state;
 
             // Debounce the button
-            if (btn_states[f][b] != prev_btn_states[f][b]) {
-              prev_btn_states[f][b] = btn_states[f][b];
+            if (btnStates[f][b] != prevBtnStates[f][b]) {
+              prevBtnStates[f][b] = btnStates[f][b];
               
               if (fb_btn_state && !elevio_stopButton()) {
                 elevio_buttonLamp(f, b, true);
