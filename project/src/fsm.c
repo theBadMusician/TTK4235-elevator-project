@@ -331,17 +331,6 @@ void fsm_spin(void) {
       }
     }
 
-    printf("ORDER QUEUE:\n"); 
-    for(int f = 0; f < N_FLOORS; f++){
-      for(int b = 0; b < N_BUTTONS; b++){
-        if (orderArr[f][b]) {
-          if (b == 0) printf("UP button pressed on floor number %d.\n", f);
-          else if (b == 1) printf("DOWN button pressed on floor number %d.\n", f);
-          else if (b == 2) printf("CAB button pressed to go to floor number %d.\n", f);
-        }
-      }
-    }
-
     switch (currentState) {
         case STATE_INIT:
             fsm_onInit();
