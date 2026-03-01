@@ -78,6 +78,8 @@ void fsm_onIdle(void) {
   
   // Door is closed
   elevio_doorOpenLamp(false);
+
+  if (!areAllElementsFalse(orderArr)) currentState = STATE_MOVING;
 }
 
 void fsm_onMoving(void) {
@@ -87,7 +89,7 @@ void fsm_onMoving(void) {
                                 (unless about to turn around)
   3. Go to IDLE if no reqs
   */
-  
+
   // If between floors, calculate an escape direction
   if (currentFloor == -1 && isStopped) {
     int targetFloor = -1;
@@ -301,7 +303,6 @@ void fsm_spin(void) {
 
                 // Add new order
                 orderArr[f][b]  = true;
-                currentState    = STATE_MOVING;
               }
             }
           }
