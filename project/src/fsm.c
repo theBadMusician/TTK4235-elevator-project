@@ -110,10 +110,52 @@ void fsm_onMoving(void) {
   3. Go to IDLE if no reqs
   */
   
-  // TODO: [DONE?] if a button is pressed during doorOpen elevator immediately starts moving
-  // TODO: [DONE?] each button pressed on the same floor holds the door open for 3 seconds
+  // If between floors, calculate an escape direction
+  if (currentFloor == -1) {
+    int targetFloor = -1;
 
-  // Return if between floors
+    // Find any pending order to serve as our target
+    for (int f = 0; f < N_FLOORS; f++) {
+      for (int b = 0; b < N_BUTTONS; b++) {
+        if (orderArr[f][b]) {
+          targetFloor = f;
+          break;
+        }
+      }
+      if (targetFloor != -1) break;
+    }
+
+    // If no orders exist, remain stopped
+    if (targetFloor == -1) {
+      currentDir = DIRN_STOP;
+      elevio_motorDirection(currentDir);
+      return; 
+    }
+
+    // Determine escape direction using positional memory
+    if (targetFloor > prevFloor) {
+      currentDir = DIRN_UP;
+    } else if (targetFloor < prevFloor) {
+      currentDir = DIRN_DOWN;
+    } else {
+      // The target is the floor we just left. 
+      // Reverse the direction we used to leave it.
+      if (prevDir == DIRN_UP) {
+          currentDir = DIRN_DOWN;
+      } else if (prevDir == DIRN_DOWN) {
+          currentDir = DIRN_UP;
+      }
+    }
+
+    prevDir = currentDir;
+    elevio_motorDirection(currentDir);
+    return; // Exit here. Once we hit a floor, normal LOOK logic takes over.
+  }
+
+
+  /* Normal Operation */
+
+  // Return if for some reason still between floors
   if (currentFloor == -1) return;
 
   // Query order list
