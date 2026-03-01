@@ -17,6 +17,8 @@ static int            prevFloor    = 0;
 static MotorDirection currentDir   = DIRN_STOP;
 static MotorDirection prevDir      = DIRN_STOP;
 
+static bool           isStopped    = false;
+
 // Queue order array
 bool orderArr[N_FLOORS][N_BUTTONS] = { false };
 
@@ -111,7 +113,7 @@ void fsm_onMoving(void) {
   */
   
   // If between floors, calculate an escape direction
-  if (currentFloor == -1) {
+  if (currentFloor == -1 && isStopped) {
     int targetFloor = -1;
 
     // Find any pending order to serve as our target
@@ -149,7 +151,8 @@ void fsm_onMoving(void) {
 
     prevDir = currentDir;
     elevio_motorDirection(currentDir);
-    return; // Exit here. Once we hit a floor, normal LOOK logic takes over.
+    isStopped = false;
+    return;
   }
 
 
@@ -249,9 +252,6 @@ void fsm_onDoorOpen(void) {
 }
 
 void fsm_onStop(void) {
-    // TODO: Do not set direction stop in idle and stop states if current floor is -1, this way we can figure which floors the elev is between using (prevFloor + currentDir)
-    // TODO: Moving state has to have logic to start moving to the closest floor after stop if inbetween floors (after an order is received)
-
     /* Stop the elevator, clear queue, reset state */
 
     // Set the the current direction to stop and stop motor
@@ -275,6 +275,9 @@ void fsm_onStop(void) {
       elevio_stopLamp(true);
       currentState = STATE_DOOR_OPEN;
     } else currentState = STATE_IDLE;
+
+    // Set stopped param for undefined floor escape
+    if (currentFloor == -1) isStopped = true;
 }
 
 void fsm_spin(void) {
