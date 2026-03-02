@@ -233,7 +233,8 @@ void fsm_onDoorOpen(void) {
 
     // No more orders, transition to idle
     if (areAllElementsFalse(orderArr)) currentState = STATE_IDLE;
-    else currentState = STATE_MOVING; // More orders await, move more
+    // More orders await, move more
+    else currentState = STATE_MOVING;
 
     // Just finished opening the door, return
     return;
