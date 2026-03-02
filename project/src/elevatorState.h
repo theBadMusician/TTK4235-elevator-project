@@ -58,9 +58,17 @@ typedef struct {
 
 /**
  * @brief Initializes the elevator state structure with default values.
+ *
  * @param[out] state Pointer to the ElevatorState structure to be initialized.
+ *
  * @pre The `state` pointer must not be NULL.
  * @post All internal variables are set to their safe startup defaults (e.g., STATE_INIT, 
  * order arrays cleared, timers initialized).
+ *
+ * @details Sets the initial state to STATE_INIT and defaults the floor tracking 
+ * to 0. Motor directions are explicitly halted using DIRN_STOP. The order queue 
+ * and previous button state arrays are iteratively cleared to ensure no "ghost" 
+ * inputs exist in memory upon startup. Finally, the required hardware/software 
+ * timers are initialized for later use.
  */
 void elevatorState_init(ElevatorState* state);

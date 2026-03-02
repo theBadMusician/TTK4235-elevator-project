@@ -5,14 +5,7 @@
 
 #include "hmi.h"
 
-/**
- * @details If the elevator is in STATE_INIT, stop inputs are ignored to prevent 
- * startup anomalies. When the physical stop button is pressed, the stop lamp is 
- * activated, a 0.5 second debounce timer is started, and the system is immediately 
- * forced into STATE_STOP. The system remains in a debouncing state until the 
- * physical button is released and the timer expires, at which point the lamp 
- * clears and normal operation can resume.
- */
+
 void hmi_stopBtnHandler(ElevatorState* elev) {
   if (elev->currentState == STATE_INIT) {
     elev->isStopPressed = false;
@@ -43,12 +36,7 @@ void hmi_stopBtnHandler(ElevatorState* elev) {
   }
 }
 
-/**
- * @details Retrieves the sensor reading via elevio_floorSensor(). If the 
- * elevator is between floors, the sensor returns -1, and the floor indicator 
- * is left at its previous valid value. Updates to the indicator lamp are 
- * suppressed during STATE_INIT.
- */
+
 void hmi_floorHandler(ElevatorState* elev) {
   // Update floor reading
   elev->currentFloor = elevio_floorSensor();
@@ -59,14 +47,6 @@ void hmi_floorHandler(ElevatorState* elev) {
 }
 
 
-
-/**
- * @details Iterates through the N_FLOORS x N_BUTTONS matrix. To prevent a single 
- * long button press from registering continuously, this function uses rising edge 
- * detection: an order is only registered if the button is currently pressed AND 
- * was not pressed in the previous polling cycle. Active inputs are strictly 
- * ignored if the stop button is active or still debouncing.
- */
 void hmi_orderHandler(ElevatorState* elev) {
   bool isStopClear = !elev->isStopPressed && !elev->isStopDebouncing;
   // Check for button presses
