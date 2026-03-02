@@ -13,13 +13,14 @@
 #define TOTAL_BUTTONS (N_FLOORS * N_BUTTONS) 
 
 // FSM private singleton state
-static ElevatorState  currentState = STATE_INIT;
-static int            currentFloor = 0;
-static int            prevFloor    = 0;
-static MotorDirection currentDir   = DIRN_STOP;
-static MotorDirection prevDir      = DIRN_STOP;
+static ElevatorState  currentState  = STATE_INIT;
+static int            currentFloor  = 0;
+static int            prevFloor     = 0;
+static MotorDirection currentDir    = DIRN_STOP;
+static MotorDirection prevDir       = DIRN_STOP;
 
-static bool           isStopped    = false;
+static bool           isStopped     = false;
+static bool           isStopPressed = false;
 
 // Queue order array
 bool orderArr[N_FLOORS][N_BUTTONS] = { false };
