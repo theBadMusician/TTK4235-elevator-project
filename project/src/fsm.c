@@ -339,21 +339,11 @@ void fsm_spin(void) {
     }
 
     switch (currentState) {
-        case STATE_INIT:
-            fsm_onInit();
-            break;
-        case STATE_IDLE:
-            fsm_onIdle();
-            break;
-        case STATE_MOVING:
-            fsm_onMoving();
-            break;
-        case STATE_DOOR_OPEN:
-            fsm_onDoorOpen();
-            break;
-        case STATE_STOP:
-            fsm_onStop();
-            break;
+      case STATE_INIT:      fsm_onInit();     break;
+      case STATE_IDLE:      fsm_onIdle();     break;
+      case STATE_MOVING:    fsm_onMoving();   break;
+      case STATE_DOOR_OPEN: fsm_onDoorOpen(); break;
+      case STATE_STOP:      fsm_onStop();     break;
     }
 
     // Set the previous floor if not between floors
