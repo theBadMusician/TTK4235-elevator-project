@@ -85,118 +85,136 @@ void fsm_onIdle(void) {
   if (!areAllElementsFalse(orderArr)) currentState = STATE_MOVING;
 }
 
+static bool _requests_above(int floor) {
+    for (int f = floor + 1; f < N_FLOORS; f++) {
+        for (int b = 0; b < N_BUTTONS; b++) {
+            if (orderArr[f][b]) return true;
+        }
+    }
+    return false;
+}
+
+static bool _requests_below(int floor) {
+    for (int f = 0; f < floor; f++) {
+        for (int b = 0; b < N_BUTTONS; b++) {
+            if (orderArr[f][b]) return true;
+        }
+    }
+    return false;
+}
+
 void fsm_onMoving(void) {
-  /* LOOK algo (modified SCAN)
-  1. Maintain direction - continue moving e.g. up if there are requests from the floors above
-  2. Ignore opposing requests - if moving e.g. up do not stop for a hall down request at f_0 
-                                (unless about to turn around)
-  3. Go to IDLE if no reqs
-  */
-
-  // If between floors, calculate an escape direction
-  if (currentFloor == -1 && isStopped) {
-    int targetFloor = -1;
-
-    // Find any pending order to serve as our target
-    for (int f = 0; f < N_FLOORS; f++) {
-      for (int b = 0; b < N_BUTTONS; b++) {
-        if (orderArr[f][b]) {
-          targetFloor = f;
-          break;
-        }
+    /* Recovery when stopped between floors */
+    if (currentFloor == -1 && isStopped) {
+      // If there are no orders, wait
+      if (!_requests_above(-1)) { 
+          return; 
       }
-      if (targetFloor != -1) break;
-    }
 
-    // If no orders exist, remain stopped
-    if (targetFloor == -1) {
-      currentDir = DIRN_STOP;
-      elevio_motorDirection(currentDir);
-      return; 
-    }
+      // Check if there is an order specifically at the floor we just left
+      bool orderAtPrevFloor = orderArr[prevFloor][BUTTON_CAB] || 
+                              orderArr[prevFloor][BUTTON_HALL_UP] || 
+                              orderArr[prevFloor][BUTTON_HALL_DOWN];
 
-    // Determine escape direction using positional memory
-    if (targetFloor > prevFloor) {
-      currentDir = DIRN_UP;
-    } else if (targetFloor < prevFloor) {
-      currentDir = DIRN_DOWN;
-    } else {
-      // The target is the floor we just left. 
-      // Reverse the direction we used to leave it.
+      // Route directly towards the requested floor
       if (prevDir == DIRN_UP) {
-          currentDir = DIRN_DOWN;
-      } else if (prevDir == DIRN_DOWN) {
+        // Hovering above prevFloor
+        if (_requests_above(prevFloor)) {
           currentDir = DIRN_UP;
-      }
-    }
-
-    prevDir = currentDir;
-    elevio_motorDirection(currentDir);
-    isStopped = false;
-    return;
-  }
-
-
-  /* Normal Operation */
-
-  // Return if for some reason still between floors
-  if (currentFloor == -1) return;
-
-  // If order is at current floor, complete the order
-  for(int b = 0; b < N_BUTTONS; b++){
-    if (orderArr[currentFloor][b]) {
-      // If moving up, ignore down hall calls; if moving down, ignore up hall calls (PRD: H2)
-      if (!isSingleElementTrue(orderArr) && ((currentDir == DIRN_UP && b == BUTTON_HALL_DOWN) || (currentDir == DIRN_DOWN && b == BUTTON_HALL_UP))) continue;
-
-      // Else open the door at current floor
-      elevio_motorDirection(DIRN_STOP);
-      currentState = STATE_DOOR_OPEN;
-      return;
-    }
-  }
-
-  // Check for orders on the floors in the current direction
-  // The order button type cannot be for the opposite direction
-  bool found_order_in_current_dir = false;
-  for (int f_offset = 1; f_offset < N_FLOORS; f_offset++) { 
-    int next_floor_to_check = currentFloor + f_offset * currentDir;
-
-    if (next_floor_to_check > -1 && next_floor_to_check < N_FLOORS) {
-      for (int b = 0; b < N_BUTTONS; b++) {
-        // If moving up, ignore down hall calls; if moving down, ignore up hall calls (PRD: H2)
-        if (!isSingleElementTrue(orderArr) && ((currentDir == DIRN_UP && b == BUTTON_HALL_DOWN) || (currentDir == DIRN_DOWN && b == BUTTON_HALL_UP))) continue;
-
-        if (orderArr[next_floor_to_check][b]) {
-          found_order_in_current_dir = true;
-          break;
+        } else if (orderAtPrevFloor || _requests_below(prevFloor)) {
+          currentDir = DIRN_DOWN;
+        }
+      } 
+      else if (prevDir == DIRN_DOWN) {
+        // Hovering below prevFloor
+        if (_requests_below(prevFloor)) {
+          currentDir = DIRN_DOWN;
+        } else if (orderAtPrevFloor || _requests_above(prevFloor)) {
+          currentDir = DIRN_UP;
         }
       }
+
+      elevio_motorDirection(currentDir);
+      isStopped = false;
+      return;
+
+      // // If there are orders anywhere, move in the previous direction to find a floor
+      // if (_requests_above(-1)) { // Passing -1 checks the whole array
+      //     currentDir = prevDir; //(prevDir == DIRN_UP) ? DIRN_DOWN : DIRN_UP; 
+      //     elevio_motorDirection(currentDir);
+      //     isStopped = false;
+      // }
+      // return; 
     }
-    if (found_order_in_current_dir) break;
-  }
-  if (found_order_in_current_dir) {
+
+    // Normal operation requires a valid floor reading
+    if (currentFloor == -1) return;
+
+
+    /* Stop logic */
+    bool shouldStop = false;
+    
+    // Always stop for cab calls at the current floor
+    if (orderArr[currentFloor][BUTTON_CAB]) shouldStop = true;
+
+    if (currentDir == DIRN_UP) {
+        // Stop for UP hall calls, or for DOWN calls if it is the highest request
+        if (orderArr[currentFloor][BUTTON_HALL_UP] || 
+           (!_requests_above(currentFloor) && orderArr[currentFloor][BUTTON_HALL_DOWN])) {
+            shouldStop = true;
+        }
+    } 
+    else if (currentDir == DIRN_DOWN) {
+        // Stop for DOWN hall calls, or for UP calls if it is the lowest request
+        if (orderArr[currentFloor][BUTTON_HALL_DOWN] || 
+           (!_requests_below(currentFloor) && orderArr[currentFloor][BUTTON_HALL_UP])) {
+            shouldStop = true;
+        }
+    }
+
+    if (shouldStop) {
+        elevio_motorDirection(DIRN_STOP);
+        currentState = STATE_DOOR_OPEN;
+        return;
+    }
+
+    /* Movement logic */
+    if (currentDir == DIRN_UP) {
+        if (_requests_above(currentFloor)) {
+            currentDir = DIRN_UP;
+        } else if (_requests_below(currentFloor)) {
+            currentDir = DIRN_DOWN;
+        } else {
+            currentDir = DIRN_STOP;
+            currentState = STATE_IDLE;
+        }
+    } 
+    else if (currentDir == DIRN_DOWN) {
+        if (_requests_below(currentFloor)) {
+            currentDir = DIRN_DOWN;
+        } else if (_requests_above(currentFloor)) {
+            currentDir = DIRN_UP;
+        } else {
+           currentDir = DIRN_STOP;
+           currentState = STATE_IDLE;
+        }
+    }
+    // Wake up from a stopped state
+    else if (currentDir == DIRN_STOP) {
+        if (_requests_above(currentFloor)) {
+            currentDir = DIRN_UP;
+        } else if (_requests_below(currentFloor)) {
+            currentDir = DIRN_DOWN;
+        } else {
+            currentState = STATE_IDLE;
+        }
+    }
+
+    // Apply the direction
+    if (currentDir != DIRN_STOP) {
+        prevDir = currentDir;
+    }
     elevio_motorDirection(currentDir);
-    return;
-  } 
-
-  // else if current dir is stop, go to closest floor
-  for (int f_offset = 1; f_offset < N_FLOORS; f_offset++) { 
-    int next_lower_floor_to_check = currentFloor - f_offset;
-    int next_upper_floor_to_check = currentFloor + f_offset;
-
-    for (int b = 0; b < N_BUTTONS; b++) {
-      if (next_lower_floor_to_check > -1 && orderArr[next_lower_floor_to_check][b]) {
-        currentDir = DIRN_DOWN;
-        break;
-      }
-      else if (next_upper_floor_to_check < N_FLOORS && orderArr[next_upper_floor_to_check][b]) {
-        currentDir = DIRN_UP;
-        break;
-      }
-    }
-  }
-  if (currentDir != DIRN_STOP) prevDir = currentDir;
-  elevio_motorDirection(currentDir);
 }
 
 void fsm_onDoorOpen(void) {
