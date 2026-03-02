@@ -136,6 +136,7 @@ void fsm_onStop(void) {
     // state transition
     if (elevator.currentFloor != -1) {
       elevio_stopLamp(true);
+      elevio_doorOpenLamp(true); // Open door right away
       elevator.currentState = STATE_DOOR_OPEN;
     } else elevator.currentState = STATE_IDLE;
 
