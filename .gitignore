@@ -1,3 +1,9 @@
-build/
+# Ignore tmp files
 **/.cache/
+
+# Executable files
 elevator
+build/
+
+# Docs
+**/docs/
