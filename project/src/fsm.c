@@ -22,6 +22,9 @@ static MotorDirection prevDir       = DIRN_STOP;
 static bool           isStopped     = false;
 static bool           isStopPressed = false;
 
+static bool isStopDebouncing = false;
+
+
 // Queue order array
 bool orderArr[N_FLOORS][N_BUTTONS] = { false };
 
@@ -256,6 +259,7 @@ void fsm_onStop(void) {
     if (currentFloor == -1) isStopped = true;
 }
 
+
 static void _stopBtnHandler(void) {
   if (currentState == STATE_INIT) {
     isStopPressed = false;
@@ -263,7 +267,6 @@ static void _stopBtnHandler(void) {
   }
 
   isStopPressed = elevio_stopButton();
-  timer_start(&stopDebouncerTimer, 0.5);
   
   if (!isStopPressed && timer_isTimeout(&stopDebouncerTimer)) {
     elevio_stopLamp(false);
@@ -271,8 +274,16 @@ static void _stopBtnHandler(void) {
     // Force reset the timer using stop
     timer_stop(&stopDebouncerTimer);
 
-  } else if (isStopPressed) {
+    // Debounce is finished
+    isStopDebouncing = false;
+  }
+  else if (isStopPressed) {
     elevio_stopLamp(true);
+
+    // Reset the timer using stop and debounce
+    isStopDebouncing = true;
+    timer_stop(&stopDebouncerTimer);
+    timer_start(&stopDebouncerTimer, 0.5);
 
     // Transition to stop state immediately
     currentState = STATE_STOP; 
@@ -289,13 +300,14 @@ static void _floorHandler(void) {
 }
 
 static void _orderHandler(void) {
+  bool isStopClear = !isStopPressed && !isStopDebouncing;
   // Check for button presses
   for(int f = 0; f < N_FLOORS; f++) {
     for(int b = 0; b < N_BUTTONS; b++) {
       bool isPressed = elevio_callButton(f, b);
 
       // Rising Edge Detection
-      if (isPressed && !prevBtnStates[f][b] && !isStopPressed) {
+      if (isPressed && !prevBtnStates[f][b] && isStopClear) {
         elevio_buttonLamp(f, b, true);
         orderArr[f][b] = true;
       }
