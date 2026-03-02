@@ -92,9 +92,16 @@ void fsm_onDoorOpen(void) {
 
     // Clear orders for this floor
     for (int b = 0; b < N_BUTTONS; b++) {
-      elevator.orderArr[elevator.currentFloor][b] = false;
-      elevio_buttonLamp(elevator.currentFloor, b, false);
+      if (elevator.currentFloor == -1) {
+        elevator.orderArr[elevator.prevFloor][b] = false;
+        elevio_buttonLamp(elevator.prevFloor, b, false);
+      } else {
+        elevator.orderArr[elevator.currentFloor][b] = false;
+        elevio_buttonLamp(elevator.currentFloor, b, false);
+      }
     }
+
+
 
     // No more orders, transition to idle
     if (areAllElementsFalse(elevator.orderArr)) elevator.currentState = STATE_IDLE;
