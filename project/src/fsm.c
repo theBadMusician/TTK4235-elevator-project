@@ -12,6 +12,7 @@
 
 #include "elevatorState.h"
 #include "movement.h"
+#include "hmi.h"
 
 static ElevatorState elevator;
 
@@ -143,69 +144,12 @@ void fsm_onStop(void) {
 }
 
 
-static void _stopBtnHandler(void) {
-  if (elevator.currentState == STATE_INIT) {
-    elevator.isStopPressed = false;
-    return;
-  }
-
-  elevator.isStopPressed = elevio_stopButton();
-  
-  if (!elevator.isStopPressed && timer_isTimeout(&elevator.stopDebouncerTimer)) {
-    elevio_stopLamp(false);
- 
-    // Force reset the timer using stop
-    timer_stop(&elevator.stopDebouncerTimer);
-
-    // Debounce is finished
-    elevator.isStopDebouncing = false;
-  }
-  else if (elevator.isStopPressed) {
-    elevio_stopLamp(true);
-
-    // Reset the timer using stop and debounce
-    elevator.isStopDebouncing = true;
-    timer_stop(&elevator.stopDebouncerTimer);
-    timer_start(&elevator.stopDebouncerTimer, 0.5);
-
-    // Transition to stop state immediately
-    elevator.currentState = STATE_STOP; 
-  }
-}
-
-static void _floorHandler(void) {
-  // Update floor reading
-  elevator.currentFloor = elevio_floorSensor();
-
-  // Update floor indicator if not in init state
-  if (elevator.currentState != STATE_INIT && elevator.currentFloor != -1) 
-    elevio_floorIndicator(elevator.currentFloor);
-}
-
-static void _orderHandler(void) {
-  bool isStopClear = !elevator.isStopPressed && !elevator.isStopDebouncing;
-  // Check for button presses
-  for(int f = 0; f < N_FLOORS; f++) {
-    for(int b = 0; b < N_BUTTONS; b++) {
-      bool isPressed = elevio_callButton(f, b);
-
-      // Rising Edge Detection
-      if (isPressed && !elevator.prevBtnStates[f][b] && isStopClear) {
-        elevio_buttonLamp(f, b, true);
-        elevator.orderArr[f][b] = true;
-      }
-      // Save current state for the next loop
-      elevator.prevBtnStates[f][b] = isPressed; 
-    }
-  }
-}
-
 void fsm_spin(void) {
     // Update floor once per spin
-    _floorHandler();
+    hmi_floorHandler(&elevator);
  
     // Check stop btn
-    _stopBtnHandler();
+    hmi_stopBtnHandler(&elevator);
    
     // Start querying after init
     if (elevator.currentState != STATE_INIT) {
@@ -217,7 +161,7 @@ void fsm_spin(void) {
         timer_stop(&elevator.btnQueryTimer);
 
         // Handle btns and set orders
-        _orderHandler();
+        hmi_orderHandler(&elevator);
       }
     }
 
