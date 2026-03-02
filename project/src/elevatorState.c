@@ -1,4 +1,3 @@
-
 #include "elevatorState.h"
 
 void elevatorState_init(ElevatorState* state) {

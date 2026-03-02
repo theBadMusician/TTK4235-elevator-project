@@ -1,16 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <signal.h>
 #include <time.h>
 
-#include "driver/elevio.h"
+#include "fsm.h"
 #include "lib/log.h"
 
-#include "timer.h"
-#include "fsm.h"
-
 int main(){
-  log_trace("Starting elevator control system...");
+  log_info("Starting elevator control system...\n");
 
   while(1){
     fsm_spin();

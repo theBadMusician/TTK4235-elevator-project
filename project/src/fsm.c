@@ -18,7 +18,7 @@ static ElevatorState elevator;
 
 void fsm_onInit(void) {
   // Driver and state init 
-  printf("Initializing elevator...");
+  log_info("Initializing elevator...");
   elevio_init();
   elevatorState_init(&elevator);
 
