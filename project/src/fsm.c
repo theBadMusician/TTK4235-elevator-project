@@ -258,55 +258,73 @@ void fsm_onStop(void) {
     if (currentFloor == -1) isStopped = true;
 }
 
-void fsm_spin(void) {
-    // Update floor reading once per spin
-    currentFloor = elevio_floorSensor();
+static void _stopBtnHandler(void) {
+  if (currentState == STATE_INIT) {
+    isStopPressed = false;
+    return;
+  }
 
-    // Start querying the btns after init
+  isStopPressed = elevio_stopButton();
+  timer_start(&stopDebouncerTimer, 0.5);
+  
+  if (!isStopPressed && timer_isTimeout(&stopDebouncerTimer)) {
+    elevio_stopLamp(false);
+ 
+    // Force reset the timer using stop
+    timer_stop(&stopDebouncerTimer);
+
+  } else if (isStopPressed) {
+    elevio_stopLamp(true);
+
+    // Transition to stop state immediately
+    currentState = STATE_STOP; 
+  }
+}
+
+static void _floorHandler(void) {
+  // Update floor reading
+  currentFloor = elevio_floorSensor();
+
+  // Update floor indicator if not in init state
+  if (currentState != STATE_INIT && currentFloor != -1) 
+    elevio_floorIndicator(currentFloor);
+}
+
+static void _orderHandler(void) {
+  // Check for button presses
+  for(int f = 0; f < N_FLOORS; f++) {
+    for(int b = 0; b < N_BUTTONS; b++) {
+      bool isPressed = elevio_callButton(f, b);
+
+      // Rising Edge Detection
+      if (isPressed && !prevBtnStates[f][b] && !isStopPressed) {
+        elevio_buttonLamp(f, b, true);
+        orderArr[f][b] = true;
+      }
+      // Save current state for the next loop
+      prevBtnStates[f][b] = isPressed; 
+    }
+  }
+}
+
+void fsm_spin(void) {
+    // Update floor once per spin
+    _floorHandler();
+ 
+    // Check stop btn
+    _stopBtnHandler();
+   
+    // Start querying after init
     if (currentState != STATE_INIT) {
-      // Update floor indicator
-      if (currentFloor != -1) elevio_floorIndicator(currentFloor);
 
       // Query slower than the spin loop
       timer_start(&btnQueryTimer, 0.01);
-
-      // Check stop btn
-      if (elevio_stopButton()) {
-        elevio_stopLamp(true);
-        timer_stop(&stopDebouncerTimer);
-        timer_start(&stopDebouncerTimer, 0.5);
-        currentState = STATE_STOP;
-      }
-
-      // Check for button presses
       if (timer_isTimeout(&btnQueryTimer)) {
+        // Reset the debounce timer
         timer_stop(&btnQueryTimer);
-        // Only take orders if the stop btn is NOT pressed
-        if (timer_isTimeout(&stopDebouncerTimer)) {
-          // Clear stop lamp if stop btn no longer pressed
-          elevio_stopLamp(elevio_stopButton());
-        }
 
-        // Check order btns
-        for(int f = 0; f < N_FLOORS; f++){
-          for(int b = 0; b < N_BUTTONS; b++){
-            // Get btn state
-            bool fb_btn_state = elevio_callButton(f, b);
-            btnStates[f][b] = fb_btn_state;
-
-            // Debounce the button
-            if (btnStates[f][b] != prevBtnStates[f][b]) {
-              prevBtnStates[f][b] = btnStates[f][b];
-              
-              if (fb_btn_state && !elevio_stopButton()) {
-                elevio_buttonLamp(f, b, true);
-
-                // Add new order
-                orderArr[f][b]  = true;
-              }
-            }
-          }
-        }
+        // Handle btns and set orders
+        _orderHandler();
       }
     }
 
