@@ -139,9 +139,8 @@ void fsm_onMoving(void) {
   // Return if for some reason still between floors
   if (currentFloor == -1) return;
 
-  // Query order list
+  // If order is at current floor, complete the order
   for(int b = 0; b < N_BUTTONS; b++){
-    // If order is at current floor, complete the order
     if (orderArr[currentFloor][b]) {
       // If moving up, ignore down hall calls; if moving down, ignore up hall calls (PRD: H2)
       if (!isSingleElementTrue(orderArr) && ((currentDir == DIRN_UP && b == BUTTON_HALL_DOWN) || (currentDir == DIRN_DOWN && b == BUTTON_HALL_UP))) continue;
