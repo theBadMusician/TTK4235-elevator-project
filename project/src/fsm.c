@@ -31,7 +31,6 @@ timerAlarm btnQueryTimer;
 timerAlarm stopDebouncerTimer;
 
 // Btn states
-bool btnStates[N_FLOORS][N_BUTTONS]      = { false };
 bool prevBtnStates[N_FLOORS][N_BUTTONS] = { false };
 
 
@@ -238,7 +237,6 @@ void fsm_onStop(void) {
 
     // Clear the order queue and btn states
     memset(orderArr,      false, sizeof(orderArr)); 
-    memset(btnStates,     false, sizeof(btnStates)); 
     memset(prevBtnStates, false, sizeof(prevBtnStates)); 
 
     // Clear button lights
