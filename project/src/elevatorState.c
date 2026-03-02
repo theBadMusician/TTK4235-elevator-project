@@ -1,5 +1,17 @@
+/**
+ * @file elevatorState.c
+ * @brief Implementation of the elevator state tracking and initialization.
+ */
+
 #include "elevatorState.h"
 
+/**
+ * @details Sets the initial state to STATE_INIT and defaults the floor tracking 
+ * to 0. Motor directions are explicitly halted using DIRN_STOP. The order queue 
+ * and previous button state arrays are iteratively cleared to ensure no "ghost" 
+ * inputs exist in memory upon startup. Finally, the required hardware/software 
+ * timers are initialized for later use.
+ */
 void elevatorState_init(ElevatorState* state) {
   // Init state variables
   state->currentState = STATE_INIT;
