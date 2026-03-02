@@ -103,118 +103,126 @@ static bool _requests_below(int floor) {
     return false;
 }
 
+/* Recovery when stopped between floors */
+static bool _movementRecoveryHandler(void) {
+  if (currentFloor == -1 && isStopped) {
+    // If there are no orders, wait
+    if (!_requests_above(-1)) { 
+      return true; 
+    }
+
+    // Check if there is an order specifically at the last floor
+    bool orderAtPrevFloor = orderArr[prevFloor][BUTTON_CAB] || 
+                            orderArr[prevFloor][BUTTON_HALL_UP] || 
+                            orderArr[prevFloor][BUTTON_HALL_DOWN];
+
+    // Route directly towards the requested floor
+    if (prevDir == DIRN_UP) {
+      // Hovering above prevFloor
+      if (_requests_above(prevFloor)) {
+        currentDir = DIRN_UP;
+      } else if (orderAtPrevFloor || _requests_below(prevFloor)) {
+        currentDir = DIRN_DOWN;
+      }
+    } 
+    else if (prevDir == DIRN_DOWN) {
+      // Hovering below prevFloor
+      if (_requests_below(prevFloor)) {
+        currentDir = DIRN_DOWN;
+      } else if (orderAtPrevFloor || _requests_above(prevFloor)) {
+        currentDir = DIRN_UP;
+      }
+    }
+
+    elevio_motorDirection(currentDir);
+    isStopped = false;
+    return true; 
+  }
+  
+  // Not in a recovery state
+  return false;
+}
+
+/* Check if we should stop at the current floor */
+static bool _movementStopHandler(void) {
+  // Always stop for cab calls at the current floor
+  if (orderArr[currentFloor][BUTTON_CAB]) return true;
+
+  if (currentDir == DIRN_UP) {
+    // Stop for UP hall calls, or for DOWN calls if it is the highest request
+    if (orderArr[currentFloor][BUTTON_HALL_UP] || (!_requests_above(currentFloor) && orderArr[currentFloor][BUTTON_HALL_DOWN])) {
+      return true;
+    }
+  } 
+  else if (currentDir == DIRN_DOWN) {
+    // Stop for DOWN hall calls, or for UP calls if it is the lowest request
+    if (orderArr[currentFloor][BUTTON_HALL_DOWN] || (!_requests_below(currentFloor) && orderArr[currentFloor][BUTTON_HALL_UP])) {
+      return true;
+    }
+  }
+  return false;
+}
+
+static void _movementDirectionHandler(void) {
+  if (currentDir == DIRN_UP) {
+    if (_requests_above(currentFloor)) {
+      currentDir = DIRN_UP;
+    } else if (_requests_below(currentFloor)) {
+      currentDir = DIRN_DOWN;
+    } else {
+      currentDir = DIRN_STOP;
+      currentState = STATE_IDLE;
+    }
+  } 
+  else if (currentDir == DIRN_DOWN) {
+    if (_requests_below(currentFloor)) {
+      currentDir = DIRN_DOWN;
+    } else if (_requests_above(currentFloor)) {
+      currentDir = DIRN_UP;
+    } else {
+      currentDir = DIRN_STOP;
+      currentState = STATE_IDLE;
+    }
+  }
+  // Wake up from a stopped state
+  else if (currentDir == DIRN_STOP) {
+    if (_requests_above(currentFloor)) {
+      currentDir = DIRN_UP;
+    } else if (_requests_below(currentFloor)) {
+      currentDir = DIRN_DOWN;
+    } else {
+      currentState = STATE_IDLE;
+    }
+  }
+
+  // Apply the direction
+  if (currentDir != DIRN_STOP) {
+    prevDir = currentDir;
+  }
+  elevio_motorDirection(currentDir);
+}
+
+
 void fsm_onMoving(void) {
-    /* Recovery when stopped between floors */
-    if (currentFloor == -1 && isStopped) {
-      // If there are no orders, wait
-      if (!_requests_above(-1)) { 
-          return; 
-      }
-
-      // Check if there is an order specifically at the floor we just left
-      bool orderAtPrevFloor = orderArr[prevFloor][BUTTON_CAB] || 
-                              orderArr[prevFloor][BUTTON_HALL_UP] || 
-                              orderArr[prevFloor][BUTTON_HALL_DOWN];
-
-      // Route directly towards the requested floor
-      if (prevDir == DIRN_UP) {
-        // Hovering above prevFloor
-        if (_requests_above(prevFloor)) {
-          currentDir = DIRN_UP;
-        } else if (orderAtPrevFloor || _requests_below(prevFloor)) {
-          currentDir = DIRN_DOWN;
-        }
-      } 
-      else if (prevDir == DIRN_DOWN) {
-        // Hovering below prevFloor
-        if (_requests_below(prevFloor)) {
-          currentDir = DIRN_DOWN;
-        } else if (orderAtPrevFloor || _requests_above(prevFloor)) {
-          currentDir = DIRN_UP;
-        }
-      }
-
-      elevio_motorDirection(currentDir);
-      isStopped = false;
-      return;
-
-      // // If there are orders anywhere, move in the previous direction to find a floor
-      // if (_requests_above(-1)) { // Passing -1 checks the whole array
-      //     currentDir = prevDir; //(prevDir == DIRN_UP) ? DIRN_DOWN : DIRN_UP; 
-      //     elevio_motorDirection(currentDir);
-      //     isStopped = false;
-      // }
-      // return; 
+    // Attempt recovery if stopped mid-shaft
+    if (_movementRecoveryHandler()) {
+        return;
     }
 
     // Normal operation requires a valid floor reading
-    if (currentFloor == -1) return;
-
-
-    /* Stop logic */
-    bool shouldStop = false;
-    
-    // Always stop for cab calls at the current floor
-    if (orderArr[currentFloor][BUTTON_CAB]) shouldStop = true;
-
-    if (currentDir == DIRN_UP) {
-        // Stop for UP hall calls, or for DOWN calls if it is the highest request
-        if (orderArr[currentFloor][BUTTON_HALL_UP] || 
-           (!_requests_above(currentFloor) && orderArr[currentFloor][BUTTON_HALL_DOWN])) {
-            shouldStop = true;
-        }
-    } 
-    else if (currentDir == DIRN_DOWN) {
-        // Stop for DOWN hall calls, or for UP calls if it is the lowest request
-        if (orderArr[currentFloor][BUTTON_HALL_DOWN] || 
-           (!_requests_below(currentFloor) && orderArr[currentFloor][BUTTON_HALL_UP])) {
-            shouldStop = true;
-        }
+    if (currentFloor == -1) {
+        return;
     }
 
-    if (shouldStop) {
+    // Evaluate if there is an order to stop at this floor
+    if (_movementStopHandler()) {
         elevio_motorDirection(DIRN_STOP);
         currentState = STATE_DOOR_OPEN;
         return;
     }
 
-    /* Movement logic */
-    if (currentDir == DIRN_UP) {
-        if (_requests_above(currentFloor)) {
-            currentDir = DIRN_UP;
-        } else if (_requests_below(currentFloor)) {
-            currentDir = DIRN_DOWN;
-        } else {
-            currentDir = DIRN_STOP;
-            currentState = STATE_IDLE;
-        }
-    } 
-    else if (currentDir == DIRN_DOWN) {
-        if (_requests_below(currentFloor)) {
-            currentDir = DIRN_DOWN;
-        } else if (_requests_above(currentFloor)) {
-            currentDir = DIRN_UP;
-        } else {
-           currentDir = DIRN_STOP;
-           currentState = STATE_IDLE;
-        }
-    }
-    // Wake up from a stopped state
-    else if (currentDir == DIRN_STOP) {
-        if (_requests_above(currentFloor)) {
-            currentDir = DIRN_UP;
-        } else if (_requests_below(currentFloor)) {
-            currentDir = DIRN_DOWN;
-        } else {
-            currentState = STATE_IDLE;
-        }
-    }
-
-    // Apply the direction
-    if (currentDir != DIRN_STOP) {
-        prevDir = currentDir;
-    }
-    elevio_motorDirection(currentDir);
+    // Determine and apply the next movement direction
+    _movementDirectionHandler();
 }
 
 void fsm_onDoorOpen(void) {
