@@ -1,6 +1,7 @@
 #include "timer.h"
 
 double timer_getWallTime() {
+  // Fetches time and converts usec to sec for a unified double value
   struct timeval timecheck;
   gettimeofday(&timecheck, NULL);
 
@@ -30,6 +31,7 @@ bool timer_isTimeout(timerAlarm* timerAlarmInstance) {
 }
 
 void timer_msSleep(long ms) {
+  // Converts milliseconds into seconds and nanoseconds for the timespec struct
   struct timespec ts;
   ts.tv_sec = ms / 1000;
   ts.tv_nsec = (ms % 1000) * 1000000L;
