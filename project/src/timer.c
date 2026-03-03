@@ -1,3 +1,7 @@
+/**
+ * @file timer.c
+ * @brief Implementation for non-blocking timers and blocking sleep.
+ */
 #include "timer.h"
 
 double timer_getWallTime() {
