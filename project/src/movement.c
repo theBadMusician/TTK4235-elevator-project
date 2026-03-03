@@ -1,3 +1,8 @@
+/**
+ * @file movement.c
+ * @brief Implementation for elevator routing, stopping logic, and direction handling.
+ *
+ */
 #include "movement.h"
 
 bool movement_requestsAbove(ElevatorState* elev, int floor) {
@@ -17,8 +22,8 @@ bool movement_requestsBelow(ElevatorState* elev, int floor) {
   return false;
 }
 
-/* Recovery when stopped between floors */
 bool movement_recoveryHandler(ElevatorState* elev) {
+  /* Recovery when stopped between floors */
   if (elev->currentFloor == -1 && elev->isStopped) {
     // If there are no orders, wait
     if (!movement_requestsAbove(elev, -1)) { 
@@ -57,8 +62,9 @@ bool movement_recoveryHandler(ElevatorState* elev) {
   return false;
 }
 
-/* Check if we should stop at the current floor */
 bool movement_stopHandler(ElevatorState* elev) {
+  /* Check if we should stop at the current floor */
+
   // Always stop for cab calls at the current floor
   if (elev->orderArr[elev->currentFloor][BUTTON_CAB]) return true;
 
@@ -78,6 +84,7 @@ bool movement_stopHandler(ElevatorState* elev) {
 }
 
 void movement_directionHandler(ElevatorState* elev) {
+  /* Determine next travel direction and apply it to the hardware */
   if (elev->currentDir == DIRN_UP) {
     if (movement_requestsAbove(elev, elev->currentFloor)) {
       elev->currentDir = DIRN_UP;
@@ -113,6 +120,8 @@ void movement_directionHandler(ElevatorState* elev) {
   if (elev->currentDir != DIRN_STOP) {
     elev->prevDir = elev->currentDir;
   }
+
+  // Engage the motor
   elevio_motorDirection(elev->currentDir);
 }
 
