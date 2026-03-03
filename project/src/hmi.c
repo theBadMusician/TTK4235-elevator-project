@@ -1,4 +1,10 @@
+/**
+ * @file hmi.c
+ * @brief Implementation of the Human-Machine Interface logic.
+ */
+
 #include "hmi.h"
+
 
 void hmi_stopBtnHandler(ElevatorState* elev) {
   if (elev->currentState == STATE_INIT) {
@@ -30,6 +36,7 @@ void hmi_stopBtnHandler(ElevatorState* elev) {
   }
 }
 
+
 void hmi_floorHandler(ElevatorState* elev) {
   // Update floor reading
   elev->currentFloor = elevio_floorSensor();
@@ -38,6 +45,7 @@ void hmi_floorHandler(ElevatorState* elev) {
   if (elev->currentState != STATE_INIT && elev->currentFloor != -1) 
     elevio_floorIndicator(elev->currentFloor);
 }
+
 
 void hmi_orderHandler(ElevatorState* elev) {
   bool isStopClear = !elev->isStopPressed && !elev->isStopDebouncing;
@@ -56,4 +64,3 @@ void hmi_orderHandler(ElevatorState* elev) {
     }
   }
 }
-

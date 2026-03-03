@@ -1,3 +1,7 @@
+/**
+ * @file elevatorState.c
+ * @brief Implementation of the elevator state tracking and initialization.
+ */
 
 #include "elevatorState.h"
 
