@@ -1,0 +1,4 @@
+<map id="timer_stop" name="timer_stop">
+<area shape="rect" id="node1" title="Forcibly stops a running timer." alt="" coords="5,5,97,31"/>
+<area shape="rect" id="node2" href="$timer_8c.html#ae38096ac74ceb6b419d7d983b7156579" title="Retrieves the current system wall time in seconds." alt="" coords="145,5,292,31"/>
+</map>

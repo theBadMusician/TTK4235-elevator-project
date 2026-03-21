@@ -1,0 +1,7 @@
+<map id="hmi_stopBtnHandler" name="hmi_stopBtnHandler">
+<area shape="rect" id="node1" title="Polls the emergency stop button and manages stop state transitions." alt="" coords="5,55,160,80"/>
+<area shape="rect" id="node2" href="$timer_8c.html#a02809ac818dfc06fb564d640030629e5" title="Checks if an active timer has expired." alt="" coords="208,5,337,31"/>
+<area shape="rect" id="node4" href="$timer_8c.html#a394d8f023aa0d99627508c66f1b4c8df" title="Starts a timer for a specified duration." alt="" coords="225,55,320,80"/>
+<area shape="rect" id="node5" href="$timer_8c.html#ae313e22da1683ba9dc9c5b03db238b3f" title="Forcibly stops a running timer." alt="" coords="227,104,319,129"/>
+<area shape="rect" id="node3" href="$timer_8c.html#ae38096ac74ceb6b419d7d983b7156579" title="Retrieves the current system wall time in seconds." alt="" coords="385,55,532,80"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="project/src/movement.c" name="project/src/movement.c">
+<area shape="rect" id="node1" title="Implementation for elevator routing, stopping logic, and direction handling." alt="" coords="55,5,231,31"/>
+<area shape="rect" id="node2" href="$movement_8h.html" title="Handles elevator routing, stopping logic, and direction calculation." alt="" coords="90,79,195,104"/>
+<area shape="rect" id="node3" href="$elevatorState_8h.html" title="Defines the state machine and data structures for the elevator." alt="" coords="81,152,204,177"/>
+<area shape="rect" id="node4" title=" " alt="" coords="5,299,88,324"/>
+<area shape="rect" id="node5" title=" " alt="" coords="85,225,201,251"/>
+<area shape="rect" id="node6" href="$timer_8h.html" title="Provides non&#45;blocking timers and blocking sleep functions." alt="" coords="225,225,293,251"/>
+<area shape="rect" id="node7" title=" " alt="" coords="112,299,203,324"/>
+<area shape="rect" id="node8" title=" " alt="" coords="227,299,301,324"/>
+<area shape="rect" id="node9" title=" " alt="" coords="325,299,389,324"/>
+</map>

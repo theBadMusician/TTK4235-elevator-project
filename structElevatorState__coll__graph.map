@@ -1,0 +1,4 @@
+<map id="ElevatorState" name="ElevatorState">
+<area shape="rect" id="node1" title="Central structure containing all state information for the elevator. This structure encapsulates the ..." alt="" coords="5,189,160,399"/>
+<area shape="rect" id="node2" href="$structtimerAlarm.html" title="Represents a non&#45;blocking timer instance." alt="" coords="18,5,147,97"/>
+</map>

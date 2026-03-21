@@ -1,0 +1,10 @@
+<map id="project/src/hmi.h" name="project/src/hmi.h">
+<area shape="rect" id="node1" title="Human&#45;Machine Interface (HMI) module for the elevator." alt="" coords="77,5,208,31"/>
+<area shape="rect" id="node2" href="$elevatorState_8h.html" title="Defines the state machine and data structures for the elevator." alt="" coords="81,79,204,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,225,88,251"/>
+<area shape="rect" id="node4" title=" " alt="" coords="85,152,201,177"/>
+<area shape="rect" id="node5" href="$timer_8h.html" title="Provides non&#45;blocking timers and blocking sleep functions." alt="" coords="225,152,293,177"/>
+<area shape="rect" id="node6" title=" " alt="" coords="112,225,203,251"/>
+<area shape="rect" id="node7" title=" " alt="" coords="227,225,301,251"/>
+<area shape="rect" id="node8" title=" " alt="" coords="325,225,389,251"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="timer_getWallTime" name="timer_getWallTime">
+<area shape="rect" id="node1" title="Retrieves the current system wall time in seconds." alt="" coords="617,81,764,107"/>
+<area shape="rect" id="node2" href="$timer_8c.html#a02809ac818dfc06fb564d640030629e5" title="Checks if an active timer has expired." alt="" coords="440,32,569,57"/>
+<area shape="rect" id="node7" href="$timer_8c.html#a394d8f023aa0d99627508c66f1b4c8df" title="Starts a timer for a specified duration." alt="" coords="457,81,552,107"/>
+<area shape="rect" id="node8" href="$timer_8c.html#ae313e22da1683ba9dc9c5b03db238b3f" title="Forcibly stops a running timer." alt="" coords="459,131,551,156"/>
+<area shape="rect" id="node3" href="$fsm_8c.html#a7ba929622cc17c5bee62e61e6ff6dd31" title=" " alt="" coords="247,32,382,57"/>
+<area shape="rect" id="node4" href="$fsm_8c.html#ad66c07e71d7ec80edf06300a93ce2907" title="Executes one single tick of the elevator&#39;s state machine." alt="" coords="108,81,189,107"/>
+<area shape="rect" id="node6" href="$hmi_8c.html#ac6c77d4c008de1a4237bf028586cbdba" title="Polls the emergency stop button and manages stop state transitions." alt="" coords="237,81,392,107"/>
+<area shape="rect" id="node5" href="$main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="Initializes the system and runs the main FSM loop." alt="" coords="5,81,60,107"/>
+</map>

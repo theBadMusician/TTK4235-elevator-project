@@ -1,0 +1,9 @@
+<map id="movement_requestsAbove" name="movement_requestsAbove">
+<area shape="rect" id="node1" title="Checks if there are any active orders above a specific floor." alt="" coords="660,55,857,80"/>
+<area shape="rect" id="node2" href="$movement_8c.html#a5cb73eec80e794f0dc43328e362d1893" title="Calculates and applies the next motor direction based on active orders." alt="" coords="404,5,612,31"/>
+<area shape="rect" id="node6" href="$movement_8c.html#ae9b65e8b422484d958c761bc9dde7e3a" title="Determines the initial direction if the elevator is halted between floors." alt="" coords="404,55,612,80"/>
+<area shape="rect" id="node7" href="$movement_8c.html#a1ad9deca3f15d03fc077306bf8a38184" title="Evaluates whether the elevator should halt at the current floor." alt="" coords="419,104,597,129"/>
+<area shape="rect" id="node3" href="$fsm_8c.html#a17823673202de2d00f98c2c38b668093" title=" " alt="" coords="237,55,356,80"/>
+<area shape="rect" id="node4" href="$fsm_8c.html#ad66c07e71d7ec80edf06300a93ce2907" title="Executes one single tick of the elevator&#39;s state machine." alt="" coords="108,55,189,80"/>
+<area shape="rect" id="node5" href="$main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="Initializes the system and runs the main FSM loop." alt="" coords="5,55,60,80"/>
+</map>

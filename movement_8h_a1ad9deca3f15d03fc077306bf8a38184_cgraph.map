@@ -1,0 +1,5 @@
+<map id="movement_stopHandler" name="movement_stopHandler">
+<area shape="rect" id="node1" title="Evaluates whether the elevator should halt at the current floor." alt="" coords="5,31,184,56"/>
+<area shape="rect" id="node2" href="$movement_8c.html#a197d089dfcba52b201ed807afe453cab" title="Checks if there are any active orders above a specific floor." alt="" coords="232,5,429,31"/>
+<area shape="rect" id="node3" href="$movement_8c.html#a25edace64503e33e74c1ecadb2c5ee22" title="Checks if there are any active orders below a specific floor." alt="" coords="233,55,429,80"/>
+</map>

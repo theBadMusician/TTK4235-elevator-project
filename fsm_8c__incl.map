@@ -1,0 +1,16 @@
+<map id="project/src/fsm.c" name="project/src/fsm.c">
+<area shape="rect" id="node1" title=" " alt="" coords="273,5,404,31"/>
+<area shape="rect" id="node2" href="$fsm_8h.html" title="Main finite state machine (FSM) loop for the elevator." alt="" coords="5,79,64,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="89,79,159,104"/>
+<area shape="rect" id="node4" title=" " alt="" coords="270,225,386,251"/>
+<area shape="rect" id="node5" title=" " alt="" coords="599,79,673,104"/>
+<area shape="rect" id="node6" href="$elevatorState_8h.html" title="Defines the state machine and data structures for the elevator." alt="" coords="281,152,404,177"/>
+<area shape="rect" id="node8" href="$timer_8h.html" title="Provides non&#45;blocking timers and blocking sleep functions." alt="" coords="519,225,587,251"/>
+<area shape="rect" id="node12" href="$movement_8h.html" title="Handles elevator routing, stopping logic, and direction calculation." alt="" coords="286,79,391,104"/>
+<area shape="rect" id="node13" href="$hmi_8h.html" title="Human&#45;Machine Interface (HMI) module for the elevator." alt="" coords="415,79,473,104"/>
+<area shape="rect" id="node14" href="$utils_8h.html" title=" " alt="" coords="443,152,506,177"/>
+<area shape="rect" id="node7" title=" " alt="" coords="397,299,480,324"/>
+<area shape="rect" id="node9" title=" " alt="" coords="504,299,595,324"/>
+<area shape="rect" id="node10" title=" " alt="" coords="619,299,693,324"/>
+<area shape="rect" id="node11" title=" " alt="" coords="717,299,781,324"/>
+</map>

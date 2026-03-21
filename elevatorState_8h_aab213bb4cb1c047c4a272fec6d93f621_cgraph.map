@@ -1,0 +1,4 @@
+<map id="elevatorState_init" name="elevatorState_init">
+<area shape="rect" id="node1" title="Initializes the elevator state structure with default values." alt="" coords="5,5,144,31"/>
+<area shape="rect" id="node2" href="$timer_8c.html#a47031d582cf9056ee05a2dd61c3c8de9" title="Initializes a timer instance to a safe default state." alt="" coords="192,5,277,31"/>
+</map>

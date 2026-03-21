@@ -1,0 +1,4 @@
+<map id="timer_isTimeout" name="timer_isTimeout">
+<area shape="rect" id="node1" title="Checks if an active timer has expired." alt="" coords="5,5,135,31"/>
+<area shape="rect" id="node2" href="$timer_8c.html#ae38096ac74ceb6b419d7d983b7156579" title="Retrieves the current system wall time in seconds." alt="" coords="183,5,329,31"/>
+</map>

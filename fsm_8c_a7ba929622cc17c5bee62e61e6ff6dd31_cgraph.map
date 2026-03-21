@@ -1,0 +1,8 @@
+<map id="fsm_onDoorOpen" name="fsm_onDoorOpen">
+<area shape="rect" id="node1" title=" " alt="" coords="5,80,140,105"/>
+<area shape="rect" id="node2" href="$utils_8c.html#af414b70978c330bfaeac55bd34940a8e" title=" " alt="" coords="188,5,343,31"/>
+<area shape="rect" id="node3" href="$timer_8c.html#a02809ac818dfc06fb564d640030629e5" title="Checks if an active timer has expired." alt="" coords="201,55,330,80"/>
+<area shape="rect" id="node5" href="$timer_8c.html#a394d8f023aa0d99627508c66f1b4c8df" title="Starts a timer for a specified duration." alt="" coords="218,104,313,129"/>
+<area shape="rect" id="node6" href="$timer_8c.html#ae313e22da1683ba9dc9c5b03db238b3f" title="Forcibly stops a running timer." alt="" coords="219,153,311,179"/>
+<area shape="rect" id="node4" href="$timer_8c.html#ae38096ac74ceb6b419d7d983b7156579" title="Retrieves the current system wall time in seconds." alt="" coords="391,104,537,129"/>
+</map>

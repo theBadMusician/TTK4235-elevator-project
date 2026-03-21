@@ -1,0 +1,8 @@
+<map id="fsm_onMoving" name="fsm_onMoving">
+<area shape="rect" id="node1" title=" " alt="" coords="5,55,124,80"/>
+<area shape="rect" id="node2" href="$movement_8c.html#a5cb73eec80e794f0dc43328e362d1893" title="Calculates and applies the next motor direction based on active orders." alt="" coords="172,5,380,31"/>
+<area shape="rect" id="node5" href="$movement_8c.html#ae9b65e8b422484d958c761bc9dde7e3a" title="Determines the initial direction if the elevator is halted between floors." alt="" coords="172,55,380,80"/>
+<area shape="rect" id="node6" href="$movement_8c.html#a1ad9deca3f15d03fc077306bf8a38184" title="Evaluates whether the elevator should halt at the current floor." alt="" coords="187,104,365,129"/>
+<area shape="rect" id="node3" href="$movement_8c.html#a197d089dfcba52b201ed807afe453cab" title="Checks if there are any active orders above a specific floor." alt="" coords="428,31,625,56"/>
+<area shape="rect" id="node4" href="$movement_8c.html#a25edace64503e33e74c1ecadb2c5ee22" title="Checks if there are any active orders below a specific floor." alt="" coords="429,80,625,105"/>
+</map>

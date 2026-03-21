@@ -1,0 +1,5 @@
+<map id="fsm_onMoving" name="fsm_onMoving">
+<area shape="rect" id="node1" title=" " alt="" coords="237,5,356,31"/>
+<area shape="rect" id="node2" href="$fsm_8c.html#ad66c07e71d7ec80edf06300a93ce2907" title="Executes one single tick of the elevator&#39;s state machine." alt="" coords="108,5,189,31"/>
+<area shape="rect" id="node3" href="$main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="Initializes the system and runs the main FSM loop." alt="" coords="5,5,60,31"/>
+</map>

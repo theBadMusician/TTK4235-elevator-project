@@ -1,0 +1,5 @@
+<map id="project/src/fsm.h" name="project/src/fsm.h">
+<area shape="rect" id="node1" title="Main finite state machine (FSM) loop for the elevator." alt="" coords="84,5,215,31"/>
+<area shape="rect" id="node2" href="$fsm_8c.html" title=" " alt="" coords="5,79,136,104"/>
+<area shape="rect" id="node3" href="$main_8c.html" title="Main entry point for the elevator control software." alt="" coords="160,79,299,104"/>
+</map>

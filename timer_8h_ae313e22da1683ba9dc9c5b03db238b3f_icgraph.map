@@ -1,0 +1,7 @@
+<map id="timer_stop" name="timer_stop">
+<area shape="rect" id="node1" title="Forcibly stops a running timer." alt="" coords="440,56,532,81"/>
+<area shape="rect" id="node2" href="$fsm_8c.html#a7ba929622cc17c5bee62e61e6ff6dd31" title=" " alt="" coords="247,5,382,31"/>
+<area shape="rect" id="node3" href="$fsm_8c.html#ad66c07e71d7ec80edf06300a93ce2907" title="Executes one single tick of the elevator&#39;s state machine." alt="" coords="108,56,189,81"/>
+<area shape="rect" id="node5" href="$hmi_8c.html#ac6c77d4c008de1a4237bf028586cbdba" title="Polls the emergency stop button and manages stop state transitions." alt="" coords="237,107,392,132"/>
+<area shape="rect" id="node4" href="$main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="Initializes the system and runs the main FSM loop." alt="" coords="5,56,60,81"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="timer_start" name="timer_start">
+<area shape="rect" id="node1" title="Starts a timer for a specified duration." alt="" coords="5,5,100,31"/>
+<area shape="rect" id="node2" href="$timer_8c.html#ae38096ac74ceb6b419d7d983b7156579" title="Retrieves the current system wall time in seconds." alt="" coords="148,5,295,31"/>
+</map>
