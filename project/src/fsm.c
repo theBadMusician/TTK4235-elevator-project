@@ -1,3 +1,8 @@
+/**
+ * @file fsm.c
+ * @brief Implementation of the Finite State Machine (FSM) for the elevator control system.
+ */
+
 #include "fsm.h"
 
 #include <string.h>
