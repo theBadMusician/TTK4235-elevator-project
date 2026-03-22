@@ -13,7 +13,7 @@ ifeq ($(MODE), debug)
     CFLAGS  = $(STD) -g -O0 -fsanitize=address -fsanitize=undefined
     LDFLAGS = -fsanitize=address -fsanitize=undefined
 else ifeq ($(MODE), rel)
-  CFLAGS  = $(STD) -O3 -DDEBUG -DLOG_USE_COLOR
+  CFLAGS  = $(STD) -O3 -DDEBUG -DLOG_USE_COLOR -Wall -Wextra -Wpedantic -Wshadow -Wfloat-equal -Wcast-align
   # CFLAGS  = $(STD) -O3 -DNDEBUG -DLOG_USE_COLOR
   LDFLAGS = 
 endif
