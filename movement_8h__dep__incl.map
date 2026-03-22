@@ -1,5 +1,5 @@
 <map id="project/src/movement.h" name="project/src/movement.h">
 <area shape="rect" id="node1" title="Handles elevator routing, stopping logic, and direction calculation." alt="" coords="70,5,247,31"/>
-<area shape="rect" id="node2" href="$fsm_8c.html" title=" " alt="" coords="5,79,136,104"/>
+<area shape="rect" id="node2" href="$fsm_8c.html" title="Implementation of the Finite State Machine (FSM) for the elevator control system." alt="" coords="5,79,136,104"/>
 <area shape="rect" id="node3" href="$movement_8c.html" title="Implementation for elevator routing, stopping logic, and direction handling." alt="" coords="160,79,336,104"/>
 </map>

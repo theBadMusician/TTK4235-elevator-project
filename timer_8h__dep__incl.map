@@ -1,7 +1,7 @@
 <map id="project/src/timer.h" name="project/src/timer.h">
 <area shape="rect" id="node1" title="Provides non&#45;blocking timers and blocking sleep functions." alt="" coords="66,5,206,31"/>
 <area shape="rect" id="node2" href="$elevatorState_8h.html" title="Defines the state machine and data structures for the elevator." alt="" coords="39,79,234,104"/>
-<area shape="rect" id="node4" href="$fsm_8c.html" title=" " alt="" coords="20,225,151,251"/>
+<area shape="rect" id="node4" href="$fsm_8c.html" title="Implementation of the Finite State Machine (FSM) for the elevator control system." alt="" coords="20,225,151,251"/>
 <area shape="rect" id="node9" href="$timer_8c.html" title="Implementation for non&#45;blocking timers and blocking sleep." alt="" coords="258,79,396,104"/>
 <area shape="rect" id="node3" href="$elevatorState_8c.html" title="Implementation of the elevator state tracking and initialization." alt="" coords="40,152,233,177"/>
 <area shape="rect" id="node5" href="$hmi_8h.html" title="Human&#45;Machine Interface (HMI) module for the elevator." alt="" coords="459,152,590,177"/>

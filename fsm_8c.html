@@ -96,6 +96,9 @@ $(document).ready(function(){initNavTree('fsm_8c.html',''); initResizable(); });
   <div class="headertitle"><div class="title">fsm.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Implementation of the Finite State Machine (FSM) for the elevator control system.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="fsm_8h_source.html">fsm.h</a>&quot;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
 <code>#include &quot;driver/elevio.h&quot;</code><br />
@@ -110,7 +113,7 @@ Include dependency graph for fsm.c:</div>
 <div class="dyncontent">
 <div class="center"><img src="fsm_8c__incl.png" border="0" usemap="#aproject_2src_2fsm_8c" alt=""/></div>
 <map name="aproject_2src_2fsm_8c" id="aproject_2src_2fsm_8c">
-<area shape="rect" title=" " alt="" coords="273,5,404,31"/>
+<area shape="rect" title="Implementation of the Finite State Machine (FSM) for the elevator control system." alt="" coords="273,5,404,31"/>
 <area shape="rect" href="fsm_8h.html" title="Main finite state machine (FSM) loop for the elevator." alt="" coords="5,79,64,104"/>
 <area shape="rect" title=" " alt="" coords="89,79,159,104"/>
 <area shape="rect" title=" " alt="" coords="270,225,386,251"/>
@@ -150,7 +153,11 @@ Variables</h2></td></tr>
 <tr class="memitem:a7a01103e68a35989febde9113a1780f5"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structElevatorState.html">ElevatorState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fsm_8c.html#a7a01103e68a35989febde9113a1780f5">elevator</a></td></tr>
 <tr class="separator:a7a01103e68a35989febde9113a1780f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Implementation of the Finite State Machine (FSM) for the elevator control system. </p>
+
+<p class="definition">Definition in file <a class="el" href="fsm_8c_source.html">fsm.c</a>.</p>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a id="a7ba929622cc17c5bee62e61e6ff6dd31" name="a7ba929622cc17c5bee62e61e6ff6dd31"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7ba929622cc17c5bee62e61e6ff6dd31">&#9670;&#160;</a></span>fsm_onDoorOpen()</h2>
 
@@ -175,11 +182,11 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="fsm_8c_source.html#l00088">88</a> of file <a class="el" href="fsm_8c_source.html">fsm.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="fsm_8c_source.html#l00093">93</a> of file <a class="el" href="fsm_8c_source.html">fsm.c</a>.</p>
 
-<p class="reference">References <a class="el" href="utils_8c_source.html#l00020">areAllElementsFalse()</a>, <a class="el" href="elevatorState_8h_source.html#l00035">ElevatorState::currentFloor</a>, <a class="el" href="elevatorState_8h_source.html#l00034">ElevatorState::currentState</a>, <a class="el" href="elevatorState_8h_source.html#l00054">ElevatorState::doorOpenTimer</a>, <a class="el" href="fsm_8c_source.html#l00015">elevator</a>, <a class="el" href="elevatorState_8h_source.html#l00043">ElevatorState::orderArr</a>, <a class="el" href="elevatorState_8h_source.html#l00039">ElevatorState::prevFloor</a>, <a class="el" href="elevatorState_8h_source.html#l00020">STATE_IDLE</a>, <a class="el" href="elevatorState_8h_source.html#l00021">STATE_MOVING</a>, <a class="el" href="timer_8c_source.html#l00033">timer_isTimeout()</a>, <a class="el" href="timer_8c_source.html#l00020">timer_start()</a>, and <a class="el" href="timer_8c_source.html#l00028">timer_stop()</a>.</p>
+<p class="reference">References <a class="el" href="utils_8c_source.html#l00020">areAllElementsFalse()</a>, <a class="el" href="elevatorState_8h_source.html#l00035">ElevatorState::currentFloor</a>, <a class="el" href="elevatorState_8h_source.html#l00034">ElevatorState::currentState</a>, <a class="el" href="elevatorState_8h_source.html#l00054">ElevatorState::doorOpenTimer</a>, <a class="el" href="fsm_8c_source.html#l00020">elevator</a>, <a class="el" href="elevatorState_8h_source.html#l00043">ElevatorState::orderArr</a>, <a class="el" href="elevatorState_8h_source.html#l00039">ElevatorState::prevFloor</a>, <a class="el" href="elevatorState_8h_source.html#l00020">STATE_IDLE</a>, <a class="el" href="elevatorState_8h_source.html#l00021">STATE_MOVING</a>, <a class="el" href="timer_8c_source.html#l00033">timer_isTimeout()</a>, <a class="el" href="timer_8c_source.html#l00020">timer_start()</a>, and <a class="el" href="timer_8c_source.html#l00028">timer_stop()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="fsm_8c_source.html#l00157">fsm_spin()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="fsm_8c_source.html#l00162">fsm_spin()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -230,11 +237,11 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="fsm_8c_source.html#l00049">49</a> of file <a class="el" href="fsm_8c_source.html">fsm.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="fsm_8c_source.html#l00054">54</a> of file <a class="el" href="fsm_8c_source.html">fsm.c</a>.</p>
 
-<p class="reference">References <a class="el" href="utils_8c_source.html#l00020">areAllElementsFalse()</a>, <a class="el" href="elevatorState_8h_source.html#l00036">ElevatorState::currentDir</a>, <a class="el" href="elevatorState_8h_source.html#l00034">ElevatorState::currentState</a>, <a class="el" href="fsm_8c_source.html#l00015">elevator</a>, <a class="el" href="elevatorState_8h_source.html#l00043">ElevatorState::orderArr</a>, and <a class="el" href="elevatorState_8h_source.html#l00021">STATE_MOVING</a>.</p>
+<p class="reference">References <a class="el" href="utils_8c_source.html#l00020">areAllElementsFalse()</a>, <a class="el" href="elevatorState_8h_source.html#l00036">ElevatorState::currentDir</a>, <a class="el" href="elevatorState_8h_source.html#l00034">ElevatorState::currentState</a>, <a class="el" href="fsm_8c_source.html#l00020">elevator</a>, <a class="el" href="elevatorState_8h_source.html#l00043">ElevatorState::orderArr</a>, and <a class="el" href="elevatorState_8h_source.html#l00021">STATE_MOVING</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="fsm_8c_source.html#l00157">fsm_spin()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="fsm_8c_source.html#l00162">fsm_spin()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -281,11 +288,11 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="fsm_8c_source.html#l00019">19</a> of file <a class="el" href="fsm_8c_source.html">fsm.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="fsm_8c_source.html#l00024">24</a> of file <a class="el" href="fsm_8c_source.html">fsm.c</a>.</p>
 
-<p class="reference">References <a class="el" href="elevatorState_8h_source.html#l00035">ElevatorState::currentFloor</a>, <a class="el" href="elevatorState_8h_source.html#l00034">ElevatorState::currentState</a>, <a class="el" href="fsm_8c_source.html#l00015">elevator</a>, <a class="el" href="elevatorState_8c_source.html#l00008">elevatorState_init()</a>, <a class="el" href="elevatorState_8h_source.html#l00039">ElevatorState::prevFloor</a>, <a class="el" href="elevatorState_8h_source.html#l00020">STATE_IDLE</a>, and <a class="el" href="timer_8c_source.html#l00037">timer_msSleep()</a>.</p>
+<p class="reference">References <a class="el" href="elevatorState_8h_source.html#l00035">ElevatorState::currentFloor</a>, <a class="el" href="elevatorState_8h_source.html#l00034">ElevatorState::currentState</a>, <a class="el" href="fsm_8c_source.html#l00020">elevator</a>, <a class="el" href="elevatorState_8c_source.html#l00008">elevatorState_init()</a>, <a class="el" href="elevatorState_8h_source.html#l00039">ElevatorState::prevFloor</a>, <a class="el" href="elevatorState_8h_source.html#l00020">STATE_IDLE</a>, and <a class="el" href="timer_8c_source.html#l00037">timer_msSleep()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="fsm_8c_source.html#l00157">fsm_spin()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="fsm_8c_source.html#l00162">fsm_spin()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -334,11 +341,11 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="fsm_8c_source.html#l00064">64</a> of file <a class="el" href="fsm_8c_source.html">fsm.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="fsm_8c_source.html#l00069">69</a> of file <a class="el" href="fsm_8c_source.html">fsm.c</a>.</p>
 
-<p class="reference">References <a class="el" href="elevatorState_8h_source.html#l00035">ElevatorState::currentFloor</a>, <a class="el" href="elevatorState_8h_source.html#l00034">ElevatorState::currentState</a>, <a class="el" href="fsm_8c_source.html#l00015">elevator</a>, <a class="el" href="movement_8c_source.html#l00086">movement_directionHandler()</a>, <a class="el" href="movement_8c_source.html#l00025">movement_recoveryHandler()</a>, <a class="el" href="movement_8c_source.html#l00065">movement_stopHandler()</a>, and <a class="el" href="elevatorState_8h_source.html#l00022">STATE_DOOR_OPEN</a>.</p>
+<p class="reference">References <a class="el" href="elevatorState_8h_source.html#l00035">ElevatorState::currentFloor</a>, <a class="el" href="elevatorState_8h_source.html#l00034">ElevatorState::currentState</a>, <a class="el" href="fsm_8c_source.html#l00020">elevator</a>, <a class="el" href="movement_8c_source.html#l00086">movement_directionHandler()</a>, <a class="el" href="movement_8c_source.html#l00025">movement_recoveryHandler()</a>, <a class="el" href="movement_8c_source.html#l00065">movement_stopHandler()</a>, and <a class="el" href="elevatorState_8h_source.html#l00022">STATE_DOOR_OPEN</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="fsm_8c_source.html#l00157">fsm_spin()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="fsm_8c_source.html#l00162">fsm_spin()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -389,11 +396,11 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="fsm_8c_source.html#l00128">128</a> of file <a class="el" href="fsm_8c_source.html">fsm.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="fsm_8c_source.html#l00133">133</a> of file <a class="el" href="fsm_8c_source.html">fsm.c</a>.</p>
 
-<p class="reference">References <a class="el" href="elevatorState_8h_source.html#l00036">ElevatorState::currentDir</a>, <a class="el" href="elevatorState_8h_source.html#l00035">ElevatorState::currentFloor</a>, <a class="el" href="elevatorState_8h_source.html#l00034">ElevatorState::currentState</a>, <a class="el" href="fsm_8c_source.html#l00015">elevator</a>, <a class="el" href="elevatorState_8h_source.html#l00049">ElevatorState::isStopped</a>, <a class="el" href="elevatorState_8h_source.html#l00043">ElevatorState::orderArr</a>, <a class="el" href="elevatorState_8h_source.html#l00046">ElevatorState::prevBtnStates</a>, <a class="el" href="elevatorState_8h_source.html#l00022">STATE_DOOR_OPEN</a>, and <a class="el" href="elevatorState_8h_source.html#l00020">STATE_IDLE</a>.</p>
+<p class="reference">References <a class="el" href="elevatorState_8h_source.html#l00036">ElevatorState::currentDir</a>, <a class="el" href="elevatorState_8h_source.html#l00035">ElevatorState::currentFloor</a>, <a class="el" href="elevatorState_8h_source.html#l00034">ElevatorState::currentState</a>, <a class="el" href="fsm_8c_source.html#l00020">elevator</a>, <a class="el" href="elevatorState_8h_source.html#l00049">ElevatorState::isStopped</a>, <a class="el" href="elevatorState_8h_source.html#l00043">ElevatorState::orderArr</a>, <a class="el" href="elevatorState_8h_source.html#l00046">ElevatorState::prevBtnStates</a>, <a class="el" href="elevatorState_8h_source.html#l00022">STATE_DOOR_OPEN</a>, and <a class="el" href="elevatorState_8h_source.html#l00020">STATE_IDLE</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="fsm_8c_source.html#l00157">fsm_spin()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="fsm_8c_source.html#l00162">fsm_spin()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -426,9 +433,9 @@ Here is the caller graph for this function:</div>
 <p>Executes one single tick of the elevator's state machine. </p>
 <p>This function should be called continuously in the main program loop (e.g., inside <code><a class="el" href="main_8c.html" title="Main entry point for the elevator control software.">main.c</a></code>'s <code>while(1)</code>). During each spin, it polls the hardware for floor updates and stop button presses, conditionally queries for new orders, and then triggers the appropriate internal state handler based on <code>elevator.currentState</code>. Finally, it updates the previous floor tracking before yielding. </p>
 
-<p class="definition">Definition at line <a class="el" href="fsm_8c_source.html#l00157">157</a> of file <a class="el" href="fsm_8c_source.html">fsm.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="fsm_8c_source.html#l00162">162</a> of file <a class="el" href="fsm_8c_source.html">fsm.c</a>.</p>
 
-<p class="reference">References <a class="el" href="elevatorState_8h_source.html#l00055">ElevatorState::btnQueryTimer</a>, <a class="el" href="elevatorState_8h_source.html#l00035">ElevatorState::currentFloor</a>, <a class="el" href="elevatorState_8h_source.html#l00034">ElevatorState::currentState</a>, <a class="el" href="fsm_8c_source.html#l00015">elevator</a>, <a class="el" href="fsm_8c_source.html#l00088">fsm_onDoorOpen()</a>, <a class="el" href="fsm_8c_source.html#l00049">fsm_onIdle()</a>, <a class="el" href="fsm_8c_source.html#l00019">fsm_onInit()</a>, <a class="el" href="fsm_8c_source.html#l00064">fsm_onMoving()</a>, <a class="el" href="fsm_8c_source.html#l00128">fsm_onStop()</a>, <a class="el" href="hmi_8c_source.html#l00040">hmi_floorHandler()</a>, <a class="el" href="hmi_8c_source.html#l00050">hmi_orderHandler()</a>, <a class="el" href="hmi_8c_source.html#l00009">hmi_stopBtnHandler()</a>, <a class="el" href="elevatorState_8h_source.html#l00039">ElevatorState::prevFloor</a>, <a class="el" href="elevatorState_8h_source.html#l00022">STATE_DOOR_OPEN</a>, <a class="el" href="elevatorState_8h_source.html#l00020">STATE_IDLE</a>, <a class="el" href="elevatorState_8h_source.html#l00019">STATE_INIT</a>, <a class="el" href="elevatorState_8h_source.html#l00021">STATE_MOVING</a>, <a class="el" href="elevatorState_8h_source.html#l00023">STATE_STOP</a>, <a class="el" href="timer_8c_source.html#l00033">timer_isTimeout()</a>, <a class="el" href="timer_8c_source.html#l00020">timer_start()</a>, and <a class="el" href="timer_8c_source.html#l00028">timer_stop()</a>.</p>
+<p class="reference">References <a class="el" href="elevatorState_8h_source.html#l00055">ElevatorState::btnQueryTimer</a>, <a class="el" href="elevatorState_8h_source.html#l00035">ElevatorState::currentFloor</a>, <a class="el" href="elevatorState_8h_source.html#l00034">ElevatorState::currentState</a>, <a class="el" href="fsm_8c_source.html#l00020">elevator</a>, <a class="el" href="fsm_8c_source.html#l00093">fsm_onDoorOpen()</a>, <a class="el" href="fsm_8c_source.html#l00054">fsm_onIdle()</a>, <a class="el" href="fsm_8c_source.html#l00024">fsm_onInit()</a>, <a class="el" href="fsm_8c_source.html#l00069">fsm_onMoving()</a>, <a class="el" href="fsm_8c_source.html#l00133">fsm_onStop()</a>, <a class="el" href="hmi_8c_source.html#l00040">hmi_floorHandler()</a>, <a class="el" href="hmi_8c_source.html#l00050">hmi_orderHandler()</a>, <a class="el" href="hmi_8c_source.html#l00009">hmi_stopBtnHandler()</a>, <a class="el" href="elevatorState_8h_source.html#l00039">ElevatorState::prevFloor</a>, <a class="el" href="elevatorState_8h_source.html#l00022">STATE_DOOR_OPEN</a>, <a class="el" href="elevatorState_8h_source.html#l00020">STATE_IDLE</a>, <a class="el" href="elevatorState_8h_source.html#l00019">STATE_INIT</a>, <a class="el" href="elevatorState_8h_source.html#l00021">STATE_MOVING</a>, <a class="el" href="elevatorState_8h_source.html#l00023">STATE_STOP</a>, <a class="el" href="timer_8c_source.html#l00033">timer_isTimeout()</a>, <a class="el" href="timer_8c_source.html#l00020">timer_start()</a>, and <a class="el" href="timer_8c_source.html#l00028">timer_stop()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="main_8c_source.html#l00026">main()</a>.</p>
 <div class="dynheader">
@@ -493,9 +500,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="fsm_8c_source.html#l00015">15</a> of file <a class="el" href="fsm_8c_source.html">fsm.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="fsm_8c_source.html#l00020">20</a> of file <a class="el" href="fsm_8c_source.html">fsm.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="fsm_8c_source.html#l00088">fsm_onDoorOpen()</a>, <a class="el" href="fsm_8c_source.html#l00049">fsm_onIdle()</a>, <a class="el" href="fsm_8c_source.html#l00019">fsm_onInit()</a>, <a class="el" href="fsm_8c_source.html#l00064">fsm_onMoving()</a>, <a class="el" href="fsm_8c_source.html#l00128">fsm_onStop()</a>, and <a class="el" href="fsm_8c_source.html#l00157">fsm_spin()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="fsm_8c_source.html#l00093">fsm_onDoorOpen()</a>, <a class="el" href="fsm_8c_source.html#l00054">fsm_onIdle()</a>, <a class="el" href="fsm_8c_source.html#l00024">fsm_onInit()</a>, <a class="el" href="fsm_8c_source.html#l00069">fsm_onMoving()</a>, <a class="el" href="fsm_8c_source.html#l00133">fsm_onStop()</a>, and <a class="el" href="fsm_8c_source.html#l00162">fsm_spin()</a>.</p>
 
 </div>
 </div>

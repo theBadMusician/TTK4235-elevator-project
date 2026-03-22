@@ -1,5 +1,5 @@
 <map id="project/src/hmi.h" name="project/src/hmi.h">
 <area shape="rect" id="node1" title="Human&#45;Machine Interface (HMI) module for the elevator." alt="" coords="83,5,213,31"/>
-<area shape="rect" id="node2" href="$fsm_8c.html" title=" " alt="" coords="5,79,136,104"/>
+<area shape="rect" id="node2" href="$fsm_8c.html" title="Implementation of the Finite State Machine (FSM) for the elevator control system." alt="" coords="5,79,136,104"/>
 <area shape="rect" id="node3" href="$hmi_8c.html" title="Implementation of the Human&#45;Machine Interface logic." alt="" coords="160,79,291,104"/>
 </map>
